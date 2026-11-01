@@ -16,10 +16,7 @@ import {
   hppMiddleware,
   mongoSanitizer,
 } from './middlewares/security.middleware.js';
-
-import authRoutes from './modules/auth/auth.routes.js';
-import healthRoutes from './modules/health/health.routes.js';
-import userRoutes from './modules/user/user.routes.js';
+import apiRouter from './routes/index.js';
 import { ApiResponse } from './utils/apiResponse.js';
 
 const app: Express = express();
@@ -48,6 +45,7 @@ app.use(compression());
 
 app.use('/api', apiLimiter);
 
+// Root Welcome Route
 app.get('/', (_req: Request, res: Response) => {
   return ApiResponse.success(res, 'Welcome to Kirtan Education API', {
     service: 'Kirtan-Education-Core-API (TypeScript)',
@@ -57,11 +55,13 @@ app.get('/', (_req: Request, res: Response) => {
   });
 });
 
-app.use('/api/v1/health', healthRoutes);
-app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/users', userRoutes);
+// Mount Centralized Versioned API Routes (health, auth, users)
+app.use('/api/v1', apiRouter);
 
+// Catch-All 404 Route Not Found
 app.use(notFoundMiddleware);
+
+// Centralized Global Error Handler
 app.use(globalErrorHandler);
 
 export default app;

@@ -30,3 +30,4 @@ export const seedInitialUser = async () => {
     logger.warn('Initial user check/seed skipped or failed:', { error: error.message });
   }
 };
+

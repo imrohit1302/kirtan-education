@@ -98,3 +98,4 @@ export const clearAuthCookies = (res: Response): void => {
   res.clearCookie('accessToken', options);
   res.clearCookie('refreshToken', { ...options, path: '/api/v1/auth' });
 };
+

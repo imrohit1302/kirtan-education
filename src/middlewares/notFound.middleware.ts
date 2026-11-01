@@ -6,3 +6,4 @@ export const notFoundMiddleware = (req: Request, _res: Response, next: NextFunct
     ApiError.notFound(`Cannot ${req.method} ${req.originalUrl} - Route not found on this server`)
   );
 };
+

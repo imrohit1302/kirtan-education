@@ -28,3 +28,4 @@ export const getHealthStatus = catchAsync(async (_req: Request, res: Response) =
   const statusCode = dbStatus.isHealthy ? HTTP_STATUS.OK : HTTP_STATUS.SERVICE_UNAVAILABLE;
   return ApiResponse.success(res, 'System health report', healthData, statusCode);
 });
+

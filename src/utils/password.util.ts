@@ -21,3 +21,4 @@ export const generateCryptoRandomToken = (bytes: number = 32): string => {
 export const hashSha256 = (data: string): string => {
   return crypto.createHash('sha256').update(data).digest('hex');
 };
+

@@ -61,3 +61,4 @@ export const getDBStatus = () => {
     isHealthy: mongoose.connection.readyState === 1,
   };
 };
+

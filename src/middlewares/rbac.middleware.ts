@@ -19,3 +19,4 @@ export const authorize = (...allowedRoles: UserRole[]): RequestHandler => {
     next();
   };
 };
+

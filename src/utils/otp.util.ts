@@ -25,3 +25,4 @@ export const isOtpExpired = (expiry?: Date): boolean => {
   if (!expiry) return true;
   return new Date() > new Date(expiry);
 };
+

@@ -18,3 +18,4 @@ export const HTTP_STATUS = {
 } as const;
 
 export type HttpStatusCode = (typeof HTTP_STATUS)[keyof typeof HTTP_STATUS];
+

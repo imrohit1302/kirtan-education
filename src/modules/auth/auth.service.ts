@@ -1,13 +1,14 @@
 import { envConfig } from '../../config/env.config.js';
 import { OTP_REASONS, ROLES, TOKEN_TYPES } from '../../constants/roles.js';
 import { ApiError } from '../../utils/apiError.js';
+import { sendOtpEmail } from '../../utils/email.util.js';
 import { generateNumericOtp, isOtpExpired } from '../../utils/otp.util.js';
 import { generateAuthTokens, verifyJwt } from '../../utils/token.util.js';
 import { User } from '../user/user.model.js';
 
 export class AuthService {
   /**
-   * User Sign Up with OTP generation
+   * User Sign Up with OTP generation and Email dispatch
    */
   static async signUp(data: {
     fullName: string;
@@ -45,11 +46,19 @@ export class AuthService {
     user.refreshToken = tokens.refreshToken;
     await user.save();
 
+    // Dispatch real email via Gmail SMTP (non-blocking)
+    sendOtpEmail({
+      to: user.email,
+      fullName: user.fullName,
+      otp,
+      reason: OTP_REASONS.ACCOUNT_VERIFY,
+    }).catch(() => {});
+
     return {
       user,
       tokens,
-      otp, // Exposed in response for instant Postman / local app verification
-      message: 'Account created successfully. Please verify your OTP to activate your account.',
+      otp, // Exposed in response for instant Postman / local testing
+      message: 'Account created successfully. Please verify your OTP sent to your email.',
     };
   }
 
@@ -155,7 +164,6 @@ export class AuthService {
       };
     }
 
-    // For password reset, leave OTP verified status valid for reset step or return confirmation
     return {
       message: 'OTP verified successfully. You can now set your new password.',
     };
@@ -175,9 +183,17 @@ export class AuthService {
     user.setOtp(otp, otpReason, 10);
     await user.save({ validateBeforeSave: false });
 
+    // Send email via SMTP
+    sendOtpEmail({
+      to: user.email,
+      fullName: user.fullName,
+      otp,
+      reason: otpReason,
+    }).catch(() => {});
+
     return {
       otp,
-      message: `Fresh OTP has been generated for ${otpReason}. Valid for 10 minutes.`,
+      message: `Fresh OTP has been generated for ${otpReason} and sent to ${user.email}.`,
     };
   }
 
@@ -197,9 +213,17 @@ export class AuthService {
     user.setOtp(otp, OTP_REASONS.PASSWORD_RESET, 10);
     await user.save({ validateBeforeSave: false });
 
+    // Send password reset email via SMTP
+    sendOtpEmail({
+      to: user.email,
+      fullName: user.fullName,
+      otp,
+      reason: OTP_REASONS.PASSWORD_RESET,
+    }).catch(() => {});
+
     return {
-      otp, // Exposed for Postman/direct testing
-      message: 'Password reset OTP generated successfully. Valid for 10 minutes.',
+      otp,
+      message: 'Password reset OTP generated and sent to your email.',
     };
   }
 
@@ -266,7 +290,7 @@ export class AuthService {
         deviceType: data.deviceType || 'web',
         deviceToken: data.deviceToken,
         role: ROLES.USER,
-        isAccountVerified: true, // Social accounts are pre-verified by provider
+        isAccountVerified: true,
       });
     } else {
       user.socialType = data.socialType;
@@ -290,7 +314,7 @@ export class AuthService {
   }
 
   /**
-   * Change Password (Authenticated user)
+   * Change Password
    */
   static async changePassword(userId: string, currentPassword: string, newPassword: string) {
     const user = await User.findById(userId).select('+password');

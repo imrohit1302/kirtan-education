@@ -59,3 +59,4 @@ export class ApiError extends Error {
     return new ApiError(HTTP_STATUS.INTERNAL_SERVER_ERROR, message, null, false);
   }
 }
+

@@ -70,9 +70,3 @@ export const logout = catchAsync(async (req: Request, res: Response) => {
   clearAuthCookies(res);
   return ApiResponse.success(res, 'Logged out successfully');
 });
-
-export const getMe = catchAsync(async (req: Request, res: Response) => {
-  return ApiResponse.success(res, 'Current user profile fetched successfully', {
-    user: req.user,
-  });
-});

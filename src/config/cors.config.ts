@@ -29,3 +29,4 @@ export const corsOptions: CorsOptions = {
   maxAge: 86400,
   optionsSuccessStatus: 204,
 };
+

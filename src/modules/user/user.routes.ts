@@ -20,16 +20,12 @@ import {
 
 const router = Router();
 
-// Require JWT authentication for all user routes
+// Protect all user routes with JWT authentication
 router.use(authenticate);
 
-// Profile endpoints (Requested: getProfile, updateProfile)
+// Profile endpoints
 router.get('/profile', getProfile);
 router.patch('/profile', validate(updateProfileSchema), updateProfile);
-
-// Convenient aliases
-router.get('/me', getProfile);
-router.patch('/me', validate(updateProfileSchema), updateProfile);
 
 // Admin-only management endpoints
 router.get('/', authorize(ROLES.ADMIN), validate(queryUsersSchema), getAllUsers);

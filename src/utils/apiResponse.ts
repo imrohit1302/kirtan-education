@@ -61,3 +61,4 @@ export class ApiResponse<T = any> {
     return res.status(HTTP_STATUS.NO_CONTENT).send();
   }
 }
+

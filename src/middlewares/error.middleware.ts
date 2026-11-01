@@ -102,3 +102,4 @@ export const globalErrorHandler = (
 
   res.status(statusCode).json(response);
 };
+
