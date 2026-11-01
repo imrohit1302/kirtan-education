@@ -1,365 +1,267 @@
-# 🎓 Kirtan Education API — Enterprise Node.js / Express / MongoDB Architecture
+# 🎓 Kirtan Education API — Enterprise TypeScript / Node.js / MongoDB Architecture
 
+[![TypeScript](https://img.shields.io/badge/TypeScript-v5.9%2B-blue.svg)](https://www.typescriptlang.org/)
 [![Node.js Version](https://img.shields.io/badge/Node.js-v20%2B-green.svg)](https://nodejs.org/)
-[![Express Version](https://img.shields.io/badge/Express-v5.3%2B-blue.svg)](https://expressjs.com/)
-[![MongoDB Mongoose](https://img.shields.io/badge/Mongoose-v9.11%2B-brightgreen.svg)](https://mongoosejs.com/)
-[![Security Hardened](https://img.shields.io/badge/Security-Hardened%20(OWASP%20Top%2010)-critical.svg)](#security-architecture)
-[![Default Port](https://img.shields.io/badge/Port-9003-orange.svg)](#port--environment)
+[![Express Version](https://img.shields.io/badge/Express-v5.3%2B-lightgrey.svg)](https://expressjs.com/)
+[![MongoDB Atlas](https://img.shields.io/badge/MongoDB-Atlas%20Cluster-brightgreen.svg)](https://www.mongodb.com/cloud/atlas)
+[![Port](https://img.shields.io/badge/Port-9003-orange.svg)](#port--environment)
+[![Postman Collection](https://img.shields.io/badge/Postman-Collection%20Ready-FF6C37.svg)](#postman-collection)
 
-A production-grade, layered RESTful API boilerplate architected according to senior backend engineering standards (10+ years Node.js industry best practices). Engineered for enterprise security, resilience, modularity, and maintainability.
+An enterprise-grade, strictly typed **TypeScript**, Express, and MongoDB RESTful API built according to senior/staff backend engineering standards (10+ years experience). Features complete OTP verification, social authentication (Google, Facebook, Apple), device tracking, RBAC, Postman Collection, and enterprise security hardening.
 
 ---
 
-## 🏛️ Architecture Overview
+## 🔑 Default Seed Account for Immediate Testing
 
-The codebase is organized following the **Modular Layered Architecture (3-Tier)**:
-Routes ➔ Middlewares (Auth / RBAC / Validation / Security) ➔ Controllers ➔ Services ➔ Models (Mongoose DAL).
+The server automatically seeds and activates the following administrator account on bootstrap:
+
+| Credential | Value |
+| :--- | :--- |
+| **Email** | `inderjeet@yopmail.com` |
+| **Password** | `123456` |
+| **Phone** | `6283396959` (`+91` / `IN`) |
+| **Role** | `admin` |
+| **Account Verified** | `true` |
+
+---
+
+## 🏛️ Architecture & Highlights
+
+- **Language**: 100% Strict **TypeScript** (`ES2022`, `NodeNext` ESM modules, strict type checks).
+- **Port**: Defaulted to **`9003`**.
+- **Database**: **MongoDB Atlas** cluster (`kirtan-education` database with resilient connection pool).
+- **Layered 3-Tier Pattern**: `Routes` ➔ `Middlewares` ➔ `Controllers` ➔ `Services` ➔ `Models`.
+- **User Model Fields**:
+  - `fullName`, `email`, `password` (hashed with `bcryptjs`, 12 rounds)
+  - `phone`, `countryCode` (default `+91`), `isoCode` (default `IN`)
+  - `role`: `'user' | 'admin'`
+  - `isAccountVerified`: boolean
+  - `otp`: numeric string (hidden by default)
+  - `otpReason`: `'account_verify' | 'password_reset'`
+  - `otpExpiry`: Date
+  - `deviceType`: `'ios' | 'android' | 'web'`
+  - `deviceToken`: string (e.g. FCM token)
+  - `socialType`: `'google' | 'facebook' | 'apple'`
+  - `socialId`: string
+  - `refreshToken`, `passwordChangedAt`, `timestamps`
+- **Authentication Flows**:
+  1. **Sign Up**: Creates account, generates 6-digit numeric OTP with 10-minute expiry, sends tokens.
+  2. **Verify OTP**: Verifies OTP and reason (`account_verify`), marks account verified.
+  3. **Resend OTP**: Issues fresh 6-digit OTP for account activation or password reset.
+  4. **Login**: Authenticates with email & password, validates account status, updates `deviceType` and `deviceToken`.
+  5. **Forget Password**: Issues 6-digit OTP with `otpReason: 'password_reset'`.
+  6. **Reset Password**: Verifies OTP and sets new password.
+  7. **Social Login**: Instant authentication & registration with Google, Facebook, or Apple.
+  8. **Profile**: `getProfile` (`GET /api/v1/users/profile`) and `updateProfile` (`PATCH /api/v1/users/profile`).
+  9. **Security**: Centralized error handling, Helmet CSP, NoSQL Injection sanitizer, HPP, tiered Rate Limiter, and Correlation IDs (`X-Request-Id`).
+
+---
+
+## 📮 Postman Collection
+
+A complete, import-ready Postman collection is provided in the root directory:
+📂 [`postman_collection.json`](./postman_collection.json)
+
+### Features included in the Postman collection:
+- Pre-configured environment variables: `{{baseUrl}}`, `{{token}}`, `{{refreshToken}}`, `{{otp}}`.
+- Automated test scripts that **automatically save access tokens, refresh tokens, and OTPs** directly into collection variables after Sign Up, Login, or OTP request calls.
+- Every API endpoint organized into folders:
+  - `1. Diagnostics & Health`
+  - `2. Authentication Section`
+  - `3. User Profile Section`
+
+---
+
+## 📂 Source Code Structure
 
 ```
 Kirtan-Education/
 ├── src/
+│   ├── app.ts                         # Express pipeline, security headers, rate limiting
+│   ├── server.ts                      # Server bootstrap on port 9003, Atlas connect, graceful exit
 │   ├── config/
-│   │   ├── env.config.js          # Zod schema validation for process.env (fails fast on invalid config)
-│   │   ├── db.config.js           # Mongoose pool management, retry backoff & connection lifecycle
-│   │   ├── logger.config.js       # Winston structured logging with rotating file & console transports
-│   │   └── cors.config.js         # Strict origin whitelisting & preflight security configuration
+│   │   ├── env.config.ts              # Zod environment variable parsing
+│   │   ├── db.config.ts               # MongoDB Atlas connection manager & pool
+│   │   ├── logger.config.ts           # Winston rotating file & colored console logger
+│   │   └── cors.config.ts             # Strict CORS origin & method whitelist
 │   ├── constants/
-│   │   ├── httpStatusCodes.js     # Standard HTTP status codes & standard status messages
-│   │   ├── roles.js               # RBAC role definitions (Admin, Instructor, Student, User)
-│   │   └── index.js               # Centralized exports
+│   │   ├── roles.ts                   # User roles (user, admin), OTP reasons, device types, social types
+│   │   └── httpStatusCodes.ts        # Standard HTTP status codes
 │   ├── middlewares/
-│   │   ├── auth.middleware.js     # JWT Bearer + HttpOnly Cookie verification & password-change checks
-│   │   ├── rbac.middleware.js     # Role-based access control authorization
-│   │   ├── error.middleware.js    # Global centralized error handler (Mongoose, JWT, Zod, SyntaxError)
-│   │   ├── notFound.middleware.js # RFC-compliant 404 handler
-│   │   ├── validate.middleware.js # Generic Zod request validator (body, query, params)
-│   │   ├── rateLimiter.middleware.js # Tiered rate limiting (General API + Strict Auth brute-force protection)
-│   │   ├── requestId.middleware.js# Distributed tracing / Correlation ID (X-Request-Id)
-│   │   └── security.middleware.js # Helmet, Mongo-Sanitize, and HPP parameter pollution defense
+│   │   ├── auth.middleware.ts         # JWT authentication & session verification
+│   │   ├── rbac.middleware.ts         # Role-Based Access Control
+│   │   ├── error.middleware.ts        # Centralized global error handler
+│   │   ├── notFound.middleware.ts     # 404 handler
+│   │   ├── rateLimiter.middleware.ts  # Tiered API rate limiting
+│   │   ├── requestId.middleware.ts    # Correlation ID generator (X-Request-Id)
+│   │   ├── security.middleware.ts     # Helmet, Mongo Sanitize, HPP
+│   │   └── validate.middleware.ts     # Zod schema request validator
 │   ├── modules/
-│   │   ├── auth/                  # Authentication Module
-│   │   │   ├── auth.controller.js
-│   │   │   ├── auth.routes.js
-│   │   │   ├── auth.service.js
-│   │   │   └── auth.validation.js
-│   │   ├── user/                  # User Management & RBAC Module
-│   │   │   ├── user.controller.js
-│   │   │   ├── user.model.js
-│   │   │   ├── user.routes.js
-│   │   │   ├── user.service.js
-│   │   │   └── user.validation.js
-│   │   └── health/                # System Diagnostics & Health Check
-│   │       ├── health.controller.js
-│   │       └── health.routes.js
-│   ├── utils/
-│   │   ├── apiError.js            # Operational vs Programming Error abstraction
-│   │   ├── apiResponse.js         # Standardized JSON response envelope
-│   │   ├── catchAsync.js          # High-performance async wrapper eliminating try/catch boilerplate
-│   │   ├── password.util.js       # Bcrypt (12 rounds) & crypto hashing/token utilities
-│   │   └── token.util.js          # Dual JWT token creation (Access + Refresh Token rotation)
-│   ├── app.js                     # Express application configuration & middleware pipeline
-│   └── server.js                  # HTTP server bootstrap, graceful shutdown & uncaught error hooks
-├── logs/                          # Daily rotating logs (error.log, combined.log)
-├── .editorconfig                  # Uniform indentation & whitespace across editors
-├── .env.example                   # Complete template of all required environment variables
-├── .env                           # Local environment configuration
-├── .gitignore                     # Git ignore rules for node_modules, logs, and secrets
-├── .prettierrc                    # Code formatting configuration
-├── package.json                   # Dependencies, scripts, and ESM definition
-└── README.md                      # Comprehensive system documentation
+│   │   ├── auth/                      # Sign up, Login, OTP, Social, Password Reset
+│   │   ├── user/                      # Profile management, Admin CRUD
+│   │   └── health/                    # Diagnostics & Atlas connection check
+│   ├── scripts/
+│   │   └── seed.ts                    # Seeds default admin user (inderjeet@yopmail.com)
+│   ├── types/
+│   │   └── index.ts                   # IUser, IAuthTokens, IJwtPayload, Express declarations
+│   └── utils/
+│       ├── apiError.ts                # Operational error wrapper
+│       ├── apiResponse.ts             # Standardized response envelope
+│       ├── catchAsync.ts              # Async controller wrapper
+│       ├── otp.util.ts                # Cryptographic 6-digit OTP generator & expiry
+│       ├── password.util.ts           # Bcrypt & SHA-256 hashing
+│       └── token.util.ts              # JWT signing, verification, and cookie helpers
+├── dist/                              # Compiled production JavaScript files
+├── postman_collection.json            # Importable Postman Collection
+├── tsconfig.json                      # Strict TypeScript compiler configuration
+├── package.json                       # Scripts: dev (tsx watch), build (tsc), start (dist)
+├── .env                               # Local environment configuration
+└── README.md
 ```
 
 ---
 
-## 🛡️ Security Architecture & Hardening
+## 🚀 Running the Project
 
-1. **Helmet HTTP Headers**:
-   - Strict `Content-Security-Policy` (CSP)
-   - HTTP Strict Transport Security (`HSTS`) with `maxAge: 31536000`, `includeSubDomains`, and `preload`
-   - Anti-clickjacking (`X-Frame-Options: DENY`)
-   - Anti-MIME sniffing (`X-Content-Type-Options: nosniff`)
-   - `X-Download-Options: noopen`
-   - `Referrer-Policy: strict-origin-when-cross-origin`
-   - Strips `X-Powered-By` header to hide technology stack.
-
-2. **NoSQL Injection Defense**:
-   - `express-mongo-sanitize` strips all `$` and `.` MongoDB query operator characters from `req.body`, `req.query`, and `req.params`.
-
-3. **HTTP Parameter Pollution (HPP)**:
-   - Prevents array injection attacks against query parameters with strict parameter whitelisting.
-
-4. **Multi-Tiered Rate Limiting**:
-   - **General API Limiter**: 100 requests per 15-minute window per IP (`express-rate-limit`).
-   - **Auth Limiter**: 10 requests per 15-minute window on sensitive endpoints (`/register`, `/login`, `/forgot-password`, `/reset-password`) to prevent credential stuffing and brute-force attacks.
-
-5. **Account Lockout on Consecutive Failed Attempts**:
-   - Automatically tracks failed password attempts. After 5 consecutive invalid logins, the account is locked for 15 minutes.
-
-6. **JWT Dual-Token Pattern with Refresh Token Rotation**:
-   - Short-lived Access Token (15 minutes).
-   - Long-lived Refresh Token (7 days) stored with automatic token rotation. If token reuse or session replay is detected, all associated sessions are invalidated immediately.
-   - Dual transport: Supports standard `Authorization: Bearer <token>` header as well as secure, `HttpOnly`, `SameSite: Strict`, encrypted cookies.
-
-7. **Password Security**:
-   - Salted and hashed with `bcryptjs` using 12 salt rounds.
-   - Passwords never returned by queries (`select: false` on Mongoose schema).
-   - Timestamp verification (`passwordChangedAt`): If a user changes their password, all previously issued access tokens are rejected.
-   - Password reset tokens stored in the database are hashed with SHA-256 (not plain text) to prevent exposure during database leakages.
-
-8. **DoS & Payload Restrictions**:
-   - Body parsers restricted to a maximum payload size of `10kb`.
-
----
-
-## 💥 Resilient Error Handling & Logging
-
-### Error Classification
-The system explicitly separates **Operational Errors** (user mistakes, invalid input, resource not found) from **Programming Errors** (runtime bugs, unhandled rejections).
-
-- **Mongoose CastError** (invalid ObjectId) ➔ automatically normalized to `400 Bad Request`.
-- **Mongoose ValidationError** ➔ normalized to `422 Unprocessable Entity` with clean `{ field, message }` arrays.
-- **MongoDB 11000 Duplicate Key** ➔ normalized to `409 Conflict` showing the exact duplicate field.
-- **JWT Errors** (`JsonWebTokenError`, `TokenExpiredError`) ➔ normalized to `401 Unauthorized`.
-- **Express JSON Body Parser SyntaxError** ➔ normalized to `400 Bad Request`.
-
-### Response Envelope Contracts
-
-#### 🟢 Standard Success Response:
-```json
-{
-  "success": true,
-  "statusCode": 200,
-  "message": "Operation completed successfully",
-  "data": { ... },
-  "meta": {
-    "timestamp": "2026-11-01T17:23:09.077Z",
-    "requestId": "d5d114d0-471c-4e3d-9c63-f6be3a7e2d3f"
-  }
-}
-```
-
-#### 🔴 Standard Error Response:
-```json
-{
-  "success": false,
-  "statusCode": 400,
-  "status": "fail",
-  "message": "Request body validation failed",
-  "errors": [
-    {
-      "field": "email",
-      "message": "Invalid email address format",
-      "target": "body"
-    }
-  ],
-  "meta": {
-    "timestamp": "2026-11-01T17:23:09.086Z",
-    "requestId": "e266ec45-f77c-4394-a8ce-11a6cd7aed05",
-    "path": "/api/v1/auth/login",
-    "method": "POST"
-  }
-}
-```
-
-> **Security Note**: In production (`NODE_ENV=production`), internal stack traces and database internals are completely suppressed. The client receives a safe error message while full diagnostic traces are securely written to `logs/error.log`.
-
----
-
-## 🚀 Getting Started
-
-### 1. Prerequisites
-- **Node.js**: v20.0.0 or higher
-- **MongoDB**: v6.0 or higher (Local or MongoDB Atlas)
-
-### 2. Installation
+### Development Mode (with Live Hot-Reloading via `tsx watch`):
 ```bash
-# Clone or navigate into directory
-cd Kirtan-Education
-
-# Install dependencies (already executed)
-npm install
-```
-
-### 3. Environment Setup
-The project uses port **9003** by default. Inspect or edit `.env`:
-```env
-NODE_ENV=development
-PORT=9003
-MONGODB_URI=mongodb://127.0.0.1:27017/kirtan_education
-JWT_ACCESS_SECRET=c518df9a85012e8477ffec954d2e5b7b6540c4a4e8d356c39a3f2b6e1e123456
-JWT_ACCESS_EXPIRATION=15m
-JWT_REFRESH_SECRET=7f8a9b2c3d4e5f6a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a
-JWT_REFRESH_EXPIRATION=7d
-JWT_COOKIE_EXPIRES_IN_DAYS=7
-CORS_ORIGIN=http://localhost:3000,http://localhost:5173
-```
-
-### 4. Running the Server
-```bash
-# Development mode with hot-reloading (nodemon)
 npm run dev
+```
 
-# Production mode
+### Production Build & Start:
+```bash
+npm run build
 npm start
 ```
 
 ---
 
-## 📡 API Reference & cURL Testing Guide
+## 📡 API Reference & Testing Guide
 
-### 🩺 1. Health & Diagnostics
-
-#### `GET /api/v1/health`
-Checks memory usage, uptime, Node runtime version, and MongoDB connection status.
+### 1. Sign Up (Register)
+`POST /api/v1/auth/sign-up`
 ```bash
-curl -X GET http://localhost:9003/api/v1/health
-```
-
----
-
-### 🔐 2. Authentication (`/api/v1/auth`)
-
-#### `POST /api/v1/auth/register`
-Register a new account. Password requires at least 1 uppercase, 1 lowercase, 1 number, and 1 special symbol (`@$!%*?&_\-#`).
-```bash
-curl -X POST http://localhost:9003/api/v1/auth/register \
+curl -X POST http://localhost:9003/api/v1/auth/sign-up \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "Alex Johnson",
-    "email": "alex.johnson@example.com",
-    "password": "SecurePassword@2026",
-    "role": "user"
+    "fullName": "Inderjeet Singh",
+    "email": "inderjeet@yopmail.com",
+    "password": "123456",
+    "phone": "6283396959",
+    "countryCode": "+91",
+    "isoCode": "IN",
+    "deviceType": "ios",
+    "deviceToken": "fcm-token-123"
   }'
 ```
 
-#### `POST /api/v1/auth/login`
-Authenticate with email and password.
+### 2. Verify OTP (Account Verification)
+`POST /api/v1/auth/verify-otp`
+```bash
+curl -X POST http://localhost:9003/api/v1/auth/verify-otp \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "inderjeet@yopmail.com",
+    "otp": "<RECEIVED_OTP>",
+    "otpReason": "account_verify"
+  }'
+```
+
+### 3. Resend OTP
+`POST /api/v1/auth/resend-otp`
+```bash
+curl -X POST http://localhost:9003/api/v1/auth/resend-otp \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "inderjeet@yopmail.com",
+    "otpReason": "account_verify"
+  }'
+```
+
+### 4. Login
+`POST /api/v1/auth/login`
 ```bash
 curl -X POST http://localhost:9003/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "alex.johnson@example.com",
-    "password": "SecurePassword@2026"
+    "email": "inderjeet@yopmail.com",
+    "password": "123456",
+    "deviceType": "ios",
+    "deviceToken": "fcm-token-123"
   }'
 ```
 
-#### `POST /api/v1/auth/refresh-token`
-Exchange refresh token for a fresh access token.
+### 5. Forget Password (Request Reset OTP)
+`POST /api/v1/auth/forget-password`
 ```bash
-curl -X POST http://localhost:9003/api/v1/auth/refresh-token \
+curl -X POST http://localhost:9003/api/v1/auth/forget-password \
   -H "Content-Type: application/json" \
   -d '{
-    "refreshToken": "<YOUR_REFRESH_TOKEN>"
+    "email": "inderjeet@yopmail.com"
   }'
 ```
 
-#### `GET /api/v1/auth/me`
-Retrieve authenticated user profile.
-```bash
-curl -X GET http://localhost:9003/api/v1/auth/me \
-  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>"
-```
-
-#### `POST /api/v1/auth/change-password`
-Change current user's password.
-```bash
-curl -X POST http://localhost:9003/api/v1/auth/change-password \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>" \
-  -d '{
-    "currentPassword": "SecurePassword@2026",
-    "newPassword": "UpdatedPassword@2026!"
-  }'
-```
-
-#### `POST /api/v1/auth/forgot-password`
-Request password reset token.
-```bash
-curl -X POST http://localhost:9003/api/v1/auth/forgot-password \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "alex.johnson@example.com"
-  }'
-```
-
-#### `POST /api/v1/auth/reset-password`
-Reset password using the reset token.
+### 6. Reset Password (using OTP)
+`POST /api/v1/auth/reset-password`
 ```bash
 curl -X POST http://localhost:9003/api/v1/auth/reset-password \
   -H "Content-Type: application/json" \
   -d '{
-    "token": "<RESET_TOKEN>",
-    "password": "BrandNewPassword@2026!"
+    "email": "inderjeet@yopmail.com",
+    "otp": "<RESET_OTP>",
+    "newPassword": "123456"
   }'
 ```
 
-#### `POST /api/v1/auth/logout`
-Revoke refresh token and clear cookies.
+### 7. Social Login (Google, Facebook, Apple)
+`POST /api/v1/auth/social-login`
 ```bash
-curl -X POST http://localhost:9003/api/v1/auth/logout \
-  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>"
-```
-
----
-
-### 👥 3. User & Admin Management (`/api/v1/users`)
-
-#### `GET /api/v1/users/me`
-Fetch current user profile.
-```bash
-curl -X GET http://localhost:9003/api/v1/users/me \
-  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>"
-```
-
-#### `PATCH /api/v1/users/me`
-Update current user profile.
-```bash
-curl -X PATCH http://localhost:9003/api/v1/users/me \
+curl -X POST http://localhost:9003/api/v1/auth/social-login \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>" \
   -d '{
-    "name": "Alex J. Smith"
+    "socialType": "google",
+    "socialId": "google-user-id-987654",
+    "email": "inderjeet.google@gmail.com",
+    "fullName": "Inderjeet Singh",
+    "deviceType": "android",
+    "deviceToken": "android-token-xyz"
   }'
 ```
 
-#### `GET /api/v1/users` *(Admin / Super Admin only)*
-Paginated search and list of users.
+### 8. Get Profile
+`GET /api/v1/users/profile`
 ```bash
-curl -X GET "http://localhost:9003/api/v1/users?page=1&limit=10&role=user&search=alex" \
-  -H "Authorization: Bearer <ADMIN_ACCESS_TOKEN>"
+curl -X GET http://localhost:9003/api/v1/users/profile \
+  -H "Authorization: Bearer <ACCESS_TOKEN>"
 ```
 
-#### `PATCH /api/v1/users/:id/role` *(Admin / Super Admin only)*
-Change a user's role (`super_admin`, `admin`, `instructor`, `student`, `user`).
+### 9. Update Profile
+`PATCH /api/v1/users/profile`
 ```bash
-curl -X PATCH http://localhost:9003/api/v1/users/<USER_ID>/role \
+curl -X PATCH http://localhost:9003/api/v1/users/profile \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <ADMIN_ACCESS_TOKEN>" \
+  -H "Authorization: Bearer <ACCESS_TOKEN>" \
   -d '{
-    "role": "instructor"
+    "fullName": "Inderjeet Singh (Updated)",
+    "phone": "6283396959",
+    "deviceType": "ios",
+    "deviceToken": "updated-token"
   }'
 ```
 
-#### `DELETE /api/v1/users/:id` *(Admin / Super Admin only)*
-Delete user account.
+### 10. Change Password
+`POST /api/v1/auth/change-password`
 ```bash
-curl -X DELETE http://localhost:9003/api/v1/users/<USER_ID> \
-  -H "Authorization: Bearer <ADMIN_ACCESS_TOKEN>"
+curl -X POST http://localhost:9003/api/v1/auth/change-password \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <ACCESS_TOKEN>" \
+  -d '{
+    "currentPassword": "123456",
+    "newPassword": "newSecretPassword123"
+  }'
 ```
-
----
-
-## 🔄 Graceful Shutdown Lifecycle
-
-When stopping the process or deploying in Kubernetes / Docker / PM2:
-1. Catches `SIGTERM` / `SIGINT` / `unhandledRejection`.
-2. Stops accepting new inbound HTTP requests (`server.close()`).
-3. Allows all active, in-flight HTTP requests to finish cleanly.
-4. Safely closes the MongoDB connection pool (`mongoose.connection.close()`).
-5. Exits process with code `0` (or `1` if an error occurs).
-6. 10-second fail-safe timer guarantees the process will never hang or zombie in containerized orchestrators.
 
 ---
 
 ## 📜 License
-ISC License. Built for high scalability and enterprise security.
+ISC License. Built for enterprise high-concurrency production deployments.
