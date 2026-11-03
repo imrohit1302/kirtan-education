@@ -46,6 +46,12 @@ export interface IAuthTokens {
   expiresIn: string;
 }
 
+export type { ICategoryDocument } from '../modules/category/category.model.js';
+export type { IRoleDocument } from '../modules/role/role.model.js';
+export type { IRaagDocument } from '../modules/raag/raag.model.js';
+export type { ITutorialDocument } from '../modules/tutorial/tutorial.model.js';
+export type { IBookDocument } from '../modules/book/book.model.js';
+
 declare global {
   namespace Express {
     interface Request {
@@ -54,4 +60,3 @@ declare global {
     }
   }
 }
-

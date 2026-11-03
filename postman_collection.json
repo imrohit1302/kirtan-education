@@ -30,6 +30,31 @@
       "key": "userId",
       "value": "",
       "type": "string"
+    },
+    {
+      "key": "categoryId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "roleId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "raagId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "tutorialId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "bookId",
+      "value": "BOOK001",
+      "type": "string"
     }
   ],
   "item": [
@@ -43,8 +68,14 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/v1/health",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "v1", "health"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "health"
+              ]
             },
             "description": "Checks system diagnostics, memory usage, uptime, and MongoDB Atlas connection status."
           }
@@ -56,8 +87,12 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/",
-              "host": ["{{baseUrl}}"],
-              "path": [""]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                ""
+              ]
             }
           }
         }
@@ -105,8 +140,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/auth/sign-up",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "v1", "auth", "sign-up"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "sign-up"
+              ]
             },
             "description": "Registers a new user and generates a 6-digit numeric OTP for account verification."
           }
@@ -142,8 +184,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/auth/verify-otp",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "v1", "auth", "verify-otp"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "verify-otp"
+              ]
             },
             "description": "Verifies OTP and marks the user's account as verified."
           }
@@ -178,8 +227,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/auth/resend-otp",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "v1", "auth", "resend-otp"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "resend-otp"
+              ]
             }
           }
         },
@@ -217,8 +273,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "v1", "auth", "login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
             },
             "description": "Logs in user with credentials and device metadata, setting JWT tokens."
           }
@@ -253,8 +316,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/auth/forget-password",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "v1", "auth", "forget-password"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "forget-password"
+              ]
             },
             "description": "Generates 6-digit OTP for password reset."
           }
@@ -275,8 +345,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/auth/reset-password",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "v1", "auth", "reset-password"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "reset-password"
+              ]
             },
             "description": "Verifies password_reset OTP and updates password."
           }
@@ -312,8 +389,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/auth/social-login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "v1", "auth", "social-login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "social-login"
+              ]
             }
           }
         },
@@ -333,8 +417,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/auth/social-login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "v1", "auth", "social-login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "social-login"
+              ]
             }
           }
         },
@@ -354,8 +445,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/auth/social-login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "v1", "auth", "social-login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "social-login"
+              ]
             }
           }
         },
@@ -379,8 +477,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/auth/change-password",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "v1", "auth", "change-password"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "change-password"
+              ]
             }
           }
         },
@@ -415,8 +520,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/auth/refresh-token",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "v1", "auth", "refresh-token"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "refresh-token"
+              ]
             }
           }
         },
@@ -432,8 +544,15 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/auth/logout",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "v1", "auth", "logout"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "logout"
+              ]
             }
           }
         }
@@ -454,8 +573,15 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/users/profile",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "v1", "users", "profile"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "profile"
+              ]
             },
             "description": "Retrieves the authenticated user's detailed profile."
           }
@@ -480,8 +606,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/users/profile",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "v1", "users", "profile"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "profile"
+              ]
             },
             "description": "Updates full name, phone number, country code, device type, and device token."
           }
@@ -498,8 +631,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/api/v1/users?page=1&limit=10&role=user",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "v1", "users"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -538,13 +677,815 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/users/{{userId}}/role",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "v1", "users", "{{userId}}", "role"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "{{userId}}",
+                "role"
+              ]
             }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Category Section",
+      "item": [
+        {
+          "name": "Create Category",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data && jsonData.data.category) {",
+                  "    var cat = jsonData.data.category;",
+                  "    pm.collectionVariables.set('categoryId', cat.id ? String(cat.id) : cat._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name_unicode\": \"ਵੋਕਲ\",\n  \"name\": \"Vocal\",\n  \"slug\": \"vocal\",\n  \"description\": \"Vocal singing lessons and riyaz practices\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories"
+              ]
+            },
+            "description": "Creates a new Category. Sequential integer ID is auto-incremented and managed by Counter model."
+          }
+        },
+        {
+          "name": "Get All Categories (Unpaginated)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories"
+              ]
+            },
+            "description": "Retrieves all Categories without pagination."
+          }
+        },
+        {
+          "name": "Get Category By ID (or customId / slug)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/categories/{{categoryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories",
+                "{{categoryId}}"
+              ]
+            },
+            "description": "Fetches single Category by MongoDB _id, custom numeric id, or slug."
+          }
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name_unicode\": \"ਵੋਕਲ (ਅੱਪਡੇਟ)\",\n  \"name\": \"Vocal (Updated)\",\n  \"description\": \"Updated vocal guidance and swar practice\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/categories/{{categoryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories",
+                "{{categoryId}}"
+              ]
+            },
+            "description": "Updates category details by ID, numeric id, or slug."
+          }
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/categories/{{categoryId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "categories",
+                "{{categoryId}}"
+              ]
+            },
+            "description": "Deletes category by ID, numeric id, or slug."
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Role Section",
+      "item": [
+        {
+          "name": "Create Role",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data && jsonData.data.role) {",
+                  "    var r = jsonData.data.role;",
+                  "    pm.collectionVariables.set('roleId', r.id ? String(r.id) : r._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Vocalist\",\n  \"slug\": \"vocalist\",\n  \"description\": \"Classical Gurmat Sangeet vocal performer\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roles"
+              ]
+            },
+            "description": "Creates a musical role. Sequential integer ID is auto-incremented and managed by Counter model."
+          }
+        },
+        {
+          "name": "Get All Roles (Unpaginated)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roles"
+              ]
+            },
+            "description": "Retrieves all performer roles without pagination."
+          }
+        },
+        {
+          "name": "Get Role By ID (or customId / slug)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roles/{{roleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roles",
+                "{{roleId}}"
+              ]
+            },
+            "description": "Fetches role by MongoDB _id, custom numeric id, or slug."
+          }
+        },
+        {
+          "name": "Update Role",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Lead Vocalist\",\n  \"description\": \"Principal vocal performer\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roles/{{roleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roles",
+                "{{roleId}}"
+              ]
+            },
+            "description": "Updates role information."
+          }
+        },
+        {
+          "name": "Delete Role",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roles/{{roleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "roles",
+                "{{roleId}}"
+              ]
+            },
+            "description": "Deletes role by ID or slug."
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Raag Section",
+      "item": [
+        {
+          "name": "Create Raag",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data && jsonData.data.raag) {",
+                  "    var rg = jsonData.data.raag;",
+                  "    pm.collectionVariables.set('raagId', rg.id ? String(rg.id) : rg._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name_unicode\": \"ਸਿਰੀ ਰਾਗੁ\",\n  \"name\": \"Sri Raag\",\n  \"slug\": \"sri-raag\",\n  \"display_order\": 1,\n  \"aroh\": \"Sa Re Ma Pa Ni Sa\",\n  \"avroh\": \"Sa Ni Dha Pa Ma Ga Re Sa\",\n  \"pakad\": \"Re Ma Pa, Ma Re, Sa\",\n  \"thaat\": \"Kalyan\",\n  \"jaati\": \"Audav-Sampooran\",\n  \"vaadi\": \"Re\",\n  \"samvadi\": \"Pa\",\n  \"time\": \"Evening\",\n  \"sur\": \"Sa Re Ga Ma Pa Dha Ni\",\n  \"wargit_sur\": \"Sa Re Ga, Re Ga Ma, Ga Ma Pa\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/raags",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "raags"
+              ]
+            },
+            "description": "Creates a Raag definition. Sequential integer ID is auto-incremented and managed by Counter model."
+          }
+        },
+        {
+          "name": "Get All Raags (Unpaginated)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/raags",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "raags"
+              ]
+            },
+            "description": "Retrieves all Raags without pagination."
+          }
+        },
+        {
+          "name": "Get Raag By ID (or customId / slug)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/raags/{{raagId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "raags",
+                "{{raagId}}"
+              ]
+            },
+            "description": "Fetches Raag by MongoDB _id, custom numeric id, or slug."
+          }
+        },
+        {
+          "name": "Update Raag",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"time\": \"Late Evening\",\n  \"description\": \"Sri Raag is the premier raag in Sri Guru Granth Sahib Ji.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/raags/{{raagId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "raags",
+                "{{raagId}}"
+              ]
+            },
+            "description": "Updates Raag musical characteristics or metadata."
+          }
+        },
+        {
+          "name": "Delete Raag",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/raags/{{raagId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "raags",
+                "{{raagId}}"
+              ]
+            },
+            "description": "Deletes Raag by ID, numeric id, or slug."
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Tutorial Section",
+      "item": [
+        {
+          "name": "Create Tutorial",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data && jsonData.data.tutorial) {",
+                  "    var tut = jsonData.data.tutorial;",
+                  "    pm.collectionVariables.set('tutorialId', tut.id ? String(tut.id) : tut._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Introduction to Sri Raag\",\n  \"yt_link\": \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\",\n  \"shabad_id\": 101,\n  \"raag\": 1,\n  \"role\": 1,\n  \"category\": 1,\n  \"verse_id\": 1001,\n  \"first_letter_start\": \"ਕ\",\n  \"description\": \"Detailed introductory tutorial on Sri Raag swar structures.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tutorials",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tutorials"
+              ]
+            },
+            "description": "Creates an educational tutorial. Sequential integer ID is auto-incremented and managed by Counter model."
+          }
+        },
+        {
+          "name": "Get All Tutorials (Unpaginated)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tutorials",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tutorials"
+              ]
+            },
+            "description": "Retrieves all Tutorials without pagination."
+          }
+        },
+        {
+          "name": "Get Tutorial By ID (or customId)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tutorials/{{tutorialId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tutorials",
+                "{{tutorialId}}"
+              ]
+            },
+            "description": "Fetches tutorial by MongoDB _id or custom numeric id."
+          }
+        },
+        {
+          "name": "Update Tutorial",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Introduction to Sri Raag - Masterclass Edition\",\n  \"description\": \"Updated high-definition practice session.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tutorials/{{tutorialId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tutorials",
+                "{{tutorialId}}"
+              ]
+            },
+            "description": "Updates tutorial details."
+          }
+        },
+        {
+          "name": "Delete Tutorial",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tutorials/{{tutorialId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tutorials",
+                "{{tutorialId}}"
+              ]
+            },
+            "description": "Deletes tutorial by ID."
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Book Section",
+      "item": [
+        {
+          "name": "Create Book",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data && jsonData.data.book) {",
+                  "    var bk = jsonData.data.book;",
+                  "    pm.collectionVariables.set('bookId', bk.id ? String(bk.id) : bk._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Gurmat Sangeet Darpan\",\n  \"description\": \"A comprehensive guide to Gurmat Sangeet, Raag, and Shabad Kirtan.\",\n  \"authorName\": \"Bhai Sahib Singh\",\n  \"imageUrl\": \"https://example.com/images/gurmat-sangeet.jpg\",\n  \"pdfUrl\": \"https://example.com/books/gurmat-sangeet.pdf\",\n  \"category\": \"Gurmat Sangeet\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "books"
+              ]
+            },
+            "description": "Creates a new reference book. Sequential code ID (e.g. BOOK001) is auto-incremented and managed by Counter model."
+          }
+        },
+        {
+          "name": "Get All Books (Unpaginated)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "books"
+              ]
+            },
+            "description": "Retrieves all books without pagination."
+          }
+        },
+        {
+          "name": "Get Book By ID (or book code)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books/{{bookId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "books",
+                "{{bookId}}"
+              ]
+            },
+            "description": "Fetches book by MongoDB _id or custom code (e.g. BOOK001)."
+          }
+        },
+        {
+          "name": "Update Book",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"An updated comprehensive guide to Gurmat Sangeet, Raag, and Shabad Kirtan with detailed notation tables.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books/{{bookId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "books",
+                "{{bookId}}"
+              ]
+            },
+            "description": "Updates book details."
+          }
+        },
+        {
+          "name": "Delete Book",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/books/{{bookId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "books",
+                "{{bookId}}"
+              ]
+            },
+            "description": "Deletes book by ID or custom code."
           }
         }
       ]
     }
   ]
 }
-
