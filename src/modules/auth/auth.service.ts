@@ -8,7 +8,9 @@ import { User } from '../user/user.model.js';
 
 export class AuthService {
   /**
-   * User Sign Up with OTP generation and Email dispatch
+   * User Sign Up with OTP generation and Email dispatch.
+   * If a user previously signed up but did not verify their OTP,
+   * treat this as a normal fresh signup attempt rather than throwing an error.
    */
   static async signUp(data: {
     fullName: string;
@@ -20,16 +22,52 @@ export class AuthService {
     deviceType?: any;
     deviceToken?: string;
   }) {
-    const isTaken = await User.isEmailTaken(data.email);
-    if (isTaken) {
-      throw ApiError.conflict('An account with this email address already exists.');
+    const normalizedEmail = data.email.trim().toLowerCase();
+    const existingUser = await User.findOne({ email: normalizedEmail });
+
+    if (existingUser) {
+      if (existingUser.isAccountVerified) {
+        throw ApiError.conflict('An account with this email address already exists.');
+      }
+
+      // User exists but has NOT verified OTP yet: treat as a normal fresh signup attempt
+      existingUser.fullName = data.fullName;
+      existingUser.password = data.password;
+      if (data.phone) existingUser.phone = data.phone;
+      if (data.countryCode) existingUser.countryCode = data.countryCode;
+      if (data.isoCode) existingUser.isoCode = data.isoCode;
+      if (data.deviceType) existingUser.deviceType = data.deviceType;
+      if (data.deviceToken) existingUser.deviceToken = data.deviceToken;
+      existingUser.isAccountVerified = false;
+
+      const otp = generateNumericOtp(6);
+      existingUser.setOtp(otp, OTP_REASONS.ACCOUNT_VERIFY, 10);
+
+      const tokens = generateAuthTokens(existingUser);
+      existingUser.refreshToken = tokens.refreshToken;
+      await existingUser.save();
+
+      // Dispatch real email via Gmail SMTP (non-blocking)
+      sendOtpEmail({
+        to: existingUser.email,
+        fullName: existingUser.fullName,
+        otp,
+        reason: OTP_REASONS.ACCOUNT_VERIFY,
+      }).catch(() => {});
+
+      return {
+        user: existingUser,
+        tokens,
+        otp,
+        message: 'Account created successfully. Please verify your OTP sent to your email.',
+      };
     }
 
     const otp = generateNumericOtp(6);
 
     const user = new User({
       fullName: data.fullName,
-      email: data.email,
+      email: normalizedEmail,
       password: data.password,
       phone: data.phone,
       countryCode: data.countryCode || '+91',
@@ -376,6 +414,27 @@ export class AuthService {
    */
   static async logout(userId: string) {
     await User.findByIdAndUpdate(userId, { $unset: { refreshToken: 1 } });
+    return true;
+  }
+
+  /**
+   * Permanently delete user account
+   */
+  static async deleteAccount(userId: string, password?: string) {
+    const user = await User.findById(userId).select('+password');
+
+    if (!user) {
+      throw ApiError.notFound('User not found.');
+    }
+
+    if (password && user.password) {
+      const isMatch = await user.isPasswordMatch(password);
+      if (!isMatch) {
+        throw ApiError.badRequest('Incorrect password provided for account deletion.');
+      }
+    }
+
+    await User.findByIdAndDelete(userId);
     return true;
   }
 }

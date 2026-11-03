@@ -4,6 +4,7 @@ import { authLimiter } from '../../middlewares/rateLimiter.middleware.js';
 import { validate } from '../../middlewares/validate.middleware.js';
 import {
   changePassword,
+  deleteAccount,
   forgetPassword,
   login,
   logout,
@@ -16,6 +17,7 @@ import {
 } from './auth.controller.js';
 import {
   changePasswordSchema,
+  deleteAccountSchema,
   forgetPasswordSchema,
   loginSchema,
   refreshTokenSchema,
@@ -43,5 +45,9 @@ router.use(authenticate);
 
 router.post('/change-password', validate(changePasswordSchema), changePassword);
 router.post('/logout', logout);
+
+// Delete Account endpoint (supports both DELETE and POST)
+router.delete('/delete-account', validate(deleteAccountSchema), deleteAccount);
+router.post('/delete-account', validate(deleteAccountSchema), deleteAccount);
 
 export default router;

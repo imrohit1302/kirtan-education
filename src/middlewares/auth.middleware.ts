@@ -27,7 +27,7 @@ export const authenticate = catchAsync(
       throw ApiError.unauthorized('Invalid token type provided.');
     }
 
-    const currentUser = await User.findById(decoded.sub).select('+isActive +passwordChangedAt');
+    const currentUser = await User.findById(decoded.sub).select('+isActive');
 
     if (!currentUser) {
       throw ApiError.unauthorized('The user belonging to this token no longer exists.');
@@ -37,12 +37,8 @@ export const authenticate = catchAsync(
       throw ApiError.forbidden('Your account has been deactivated. Please contact support.');
     }
 
-    if (currentUser.isPasswordChangedAfter(decoded.iat || 0)) {
-      throw ApiError.unauthorized('User recently changed password. Please log in again.');
-    }
-
+    // User remains logged in permanently until they explicitly choose to log out themselves
     req.user = currentUser;
     next();
   }
 );
-

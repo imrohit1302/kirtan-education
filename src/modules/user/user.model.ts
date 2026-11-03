@@ -192,7 +192,11 @@ userSchema.statics.isEmailTaken = async function (
   email: string,
   excludeUserId?: string
 ): Promise<boolean> {
-  const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
+  const user = await this.findOne({
+    email: email.toLowerCase(),
+    isAccountVerified: true,
+    _id: { $ne: excludeUserId },
+  });
   return !!user;
 };
 

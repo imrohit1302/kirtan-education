@@ -150,7 +150,7 @@
                 "sign-up"
               ]
             },
-            "description": "Registers a new user and generates a 6-digit numeric OTP for account verification."
+            "description": "Creates a new user account with OTP email dispatch. Note: Unverified signups are not considered existing users; repeated signups with the same email before OTP verification are treated as fresh signup attempts."
           }
         },
         {
@@ -554,6 +554,55 @@
                 "logout"
               ]
             }
+          }
+        },
+        {
+          "name": "Delete Account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success) {",
+                  "    pm.collectionVariables.set(\"token\", \"\");",
+                  "    pm.collectionVariables.set(\"refreshToken\", \"\");",
+                  "    pm.collectionVariables.set(\"userId\", \"\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/delete-account",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "delete-account"
+              ]
+            },
+            "description": "Permanently deletes the authenticated user account and terminates session. Password confirmation is optional. Also accessible via POST."
           }
         }
       ]

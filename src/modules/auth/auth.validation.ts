@@ -81,3 +81,11 @@ export const refreshTokenSchema = {
     })
     .optional(),
 };
+
+export const deleteAccountSchema = {
+  body: z
+    .object({
+      password: z.string().optional(),
+    })
+    .optional(),
+};

@@ -70,3 +70,9 @@ export const logout = catchAsync(async (req: Request, res: Response) => {
   clearAuthCookies(res);
   return ApiResponse.success(res, 'Logged out successfully');
 });
+
+export const deleteAccount = catchAsync(async (req: Request, res: Response) => {
+  await AuthService.deleteAccount(req.user!._id.toString(), req.body?.password);
+  clearAuthCookies(res);
+  return ApiResponse.success(res, 'Account deleted successfully');
+});

@@ -5,12 +5,19 @@ import { TOKEN_TYPES } from '../constants/roles.js';
 import { IAuthTokens, IJwtPayload, IUser } from '../types/index.js';
 import { ApiError } from './apiError.js';
 
-export const signJwt = (payload: object, secret: string, expiresIn: string): string => {
-  return jwt.sign(payload, secret, {
-    expiresIn: expiresIn as any,
+export const signJwt = (payload: object, secret: string, expiresIn?: string): string => {
+  const options: jwt.SignOptions = {
     issuer: 'kirtan-education-api',
     audience: 'kirtan-education-clients',
-  });
+  };
+
+  const exp = expiresIn || envConfig.JWT_ACCESS_EXPIRATION;
+  // Only set expiresIn if explicitly provided and not infinite/never
+  if (exp && exp !== 'never' && exp !== 'infinity' && exp !== 'infinite') {
+    options.expiresIn = exp as any;
+  }
+
+  return jwt.sign(payload, secret, options);
 };
 
 export const verifyJwt = <T extends object = IJwtPayload>(token: string, secret: string): T => {
@@ -53,7 +60,7 @@ export const generateAuthTokens = (user: IUser): IAuthTokens => {
     tokenType: 'Bearer',
     accessToken,
     refreshToken,
-    expiresIn: envConfig.JWT_ACCESS_EXPIRATION,
+    expiresIn: envConfig.JWT_ACCESS_EXPIRATION || 'never',
   };
 };
 
@@ -63,25 +70,25 @@ export const setAuthCookies = (
 ): void => {
   const isProduction = envConfig.NODE_ENV === 'production';
 
+  // 100 years (~3.15 billion ms) for permanent session persistence until manual logout
+  const INFINITE_COOKIE_MS = 100 * 365.25 * 24 * 60 * 60 * 1000;
+
   const defaultCookieOptions = {
     httpOnly: true,
     secure: isProduction,
     sameSite: (isProduction ? 'strict' : 'lax') as 'strict' | 'lax',
     path: '/',
+    maxAge: INFINITE_COOKIE_MS,
   };
 
   if (tokens.accessToken) {
-    res.cookie('accessToken', tokens.accessToken, {
-      ...defaultCookieOptions,
-      maxAge: 15 * 60 * 1000,
-    });
+    res.cookie('accessToken', tokens.accessToken, defaultCookieOptions);
   }
 
   if (tokens.refreshToken) {
     res.cookie('refreshToken', tokens.refreshToken, {
       ...defaultCookieOptions,
       path: '/api/v1/auth',
-      maxAge: envConfig.JWT_COOKIE_EXPIRES_IN_DAYS * 24 * 60 * 60 * 1000,
     });
   }
 };
@@ -98,4 +105,3 @@ export const clearAuthCookies = (res: Response): void => {
   res.clearCookie('accessToken', options);
   res.clearCookie('refreshToken', { ...options, path: '/api/v1/auth' });
 };
-

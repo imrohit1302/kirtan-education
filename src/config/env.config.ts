@@ -15,10 +15,10 @@ const envSchema = z.object({
   // Support both JWT_SECRET_KEY and JWT_ACCESS_SECRET
   JWT_SECRET_KEY: z.string().min(10).optional(),
   JWT_ACCESS_SECRET: z.string().min(10).default('abcdefghijklmnopqrstuvwxyz'),
-  JWT_ACCESS_EXPIRATION: z.string().default('15m'),
+  JWT_ACCESS_EXPIRATION: z.string().default('never'),
   JWT_REFRESH_SECRET: z.string().min(10).default('7f8a9b2c3d4e5f6a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a'),
-  JWT_REFRESH_EXPIRATION: z.string().default('7d'),
-  JWT_COOKIE_EXPIRES_IN_DAYS: z.coerce.number().int().positive().default(7),
+  JWT_REFRESH_EXPIRATION: z.string().default('never'),
+  JWT_COOKIE_EXPIRES_IN_DAYS: z.coerce.number().int().positive().default(36500),
   CORS_ORIGIN: z.string().default('*'),
   RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(15 * 60 * 1000),
   RATE_LIMIT_MAX: z.coerce.number().int().positive().default(100),
