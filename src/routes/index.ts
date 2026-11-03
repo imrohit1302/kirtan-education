@@ -10,3 +10,4 @@ apiRouter.use('/auth', authRoutes);
 apiRouter.use('/users', userRoutes);
 
 export default apiRouter;
+
