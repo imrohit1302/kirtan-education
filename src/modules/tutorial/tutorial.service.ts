@@ -48,28 +48,20 @@ export class TutorialService {
       filter.isActive = query.isActive;
     }
 
-    if (query.raag !== undefined) {
-      const num = Number(query.raag);
-      filter.raag =
-        !isNaN(num) && String(num) === String(query.raag)
-          ? { $in: [num, String(query.raag)] }
-          : query.raag;
+    if (query.raag !== undefined && query.raag !== '') {
+      filter.raag = query.raag;
     }
 
-    if (query.role !== undefined) {
-      const num = Number(query.role);
-      filter.role =
-        !isNaN(num) && String(num) === String(query.role)
-          ? { $in: [num, String(query.role)] }
-          : query.role;
+    if (query.role !== undefined && query.role !== '') {
+      filter.role = query.role;
     }
 
-    if (query.category !== undefined) {
-      const num = Number(query.category);
-      filter.category =
-        !isNaN(num) && String(num) === String(query.category)
-          ? { $in: [num, String(query.category)] }
-          : query.category;
+    if (query.category !== undefined && query.category !== '') {
+      if (query.category === 'null' || query.category === 'none') {
+        filter.category = null;
+      } else {
+        filter.category = query.category;
+      }
     }
 
     if (query.shabad_id !== undefined) {

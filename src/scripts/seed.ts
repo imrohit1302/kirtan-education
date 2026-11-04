@@ -1,11 +1,18 @@
+import mongoose from 'mongoose';
 import { connectDB, disconnectDB } from '../config/db.config.js';
 import { logger } from '../config/logger.config.js';
 import { ROLES } from '../constants/roles.js';
 import { Category } from '../modules/category/category.model.js';
 import { Raag } from '../modules/raag/raag.model.js';
 import { Role } from '../modules/role/role.model.js';
+import { Tutorial } from '../modules/tutorial/tutorial.model.js';
 import { User } from '../modules/user/user.model.js';
-import { categoriesSeedData, raagsSeedData, rolesSeedData } from './seedData.js';
+import {
+  categoriesSeedData,
+  raagsSeedData,
+  rolesSeedData,
+  tutorialsSeedData,
+} from './seedData.js';
 
 export const seedInitialUser = async () => {
   try {
@@ -139,12 +146,50 @@ export const seedRaags = async () => {
   }
 };
 
+export const seedTutorials = async () => {
+  try {
+    let processed = 0;
+
+    for (const item of tutorialsSeedData) {
+      const doc = await Tutorial.findOneAndUpdate(
+        { $or: [{ id: item.id }, { customId: item.id }] },
+        {
+          $set: {
+            id: item.id,
+            customId: item.id,
+            title: item.title,
+            yt_link: item.yt_link,
+            shabad_id: item.shabad_id,
+            raag: item.raag ? new mongoose.Types.ObjectId(item.raag) : null,
+            role: item.role ? new mongoose.Types.ObjectId(item.role) : null,
+            category: item.category ? new mongoose.Types.ObjectId(item.category) : null,
+            verse_id: item.verse_id,
+            first_letter_start: item.first_letter_start,
+            createdAt: new Date(item.created_at),
+            isActive: true,
+          },
+        },
+        { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true }
+      );
+
+      if (doc) {
+        processed++;
+      }
+    }
+
+    logger.info(`✅ Tutorials seeded successfully (${processed} total processed).`);
+  } catch (error: any) {
+    logger.error('Failed to seed Tutorials:', { error: error.message });
+  }
+};
+
 export const seedAll = async () => {
   logger.info('🌱 Starting database seeding process...');
   await seedInitialUser();
   await seedCategories();
   await seedRoles();
   await seedRaags();
+  await seedTutorials();
   logger.info('🎉 All initial data seeded successfully!');
 };
 

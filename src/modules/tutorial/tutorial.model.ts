@@ -5,12 +5,12 @@ export interface ITutorialDocument extends Document {
   customId?: any;
   title: string;
   yt_link: string;
-  shabad_id?: number | string;
-  raag?: any;
-  role?: any;
-  category?: any;
-  verse_id?: number | string;
-  first_letter_start?: string;
+  shabad_id?: number | string | null;
+  raag?: mongoose.Types.ObjectId | string | null;
+  role?: mongoose.Types.ObjectId | string | null;
+  category?: mongoose.Types.ObjectId | string | null;
+  verse_id?: number | string | null;
+  first_letter_start?: string | null;
   description?: string;
   isActive: boolean;
   createdAt: Date;
@@ -46,15 +46,21 @@ const tutorialSchema = new Schema<ITutorialDocument, ITutorialModel>(
       index: true,
     },
     raag: {
-      type: Schema.Types.Mixed,
+      type: Schema.Types.ObjectId,
+      ref: 'Raag',
+      default: null,
       index: true,
     },
     role: {
-      type: Schema.Types.Mixed,
+      type: Schema.Types.ObjectId,
+      ref: 'Role',
+      default: null,
       index: true,
     },
     category: {
-      type: Schema.Types.Mixed,
+      type: Schema.Types.ObjectId,
+      ref: 'Category',
+      default: null,
       index: true,
     },
     verse_id: {
