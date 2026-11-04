@@ -30,7 +30,28 @@ export const validate = (schemas: ValidationSchema): RequestHandler => {
             );
           }
 
-          req[target] = result.data;
+          // In Express 5, req.query is a getter-only property on express.request prototype.
+          // Direct assignment (`req.query = ...`) throws a TypeError.
+          // Defining an own-property via Object.defineProperty cleanly overrides it.
+          if (target === 'query') {
+            Object.defineProperty(req, 'query', {
+              value: result.data,
+              writable: true,
+              enumerable: true,
+              configurable: true,
+            });
+          } else {
+            try {
+              req[target] = result.data;
+            } catch {
+              Object.defineProperty(req, target, {
+                value: result.data,
+                writable: true,
+                enumerable: true,
+                configurable: true,
+              });
+            }
+          }
         }
       }
 
@@ -40,4 +61,3 @@ export const validate = (schemas: ValidationSchema): RequestHandler => {
     }
   };
 };
-
