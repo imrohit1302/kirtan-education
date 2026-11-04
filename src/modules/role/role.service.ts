@@ -1,25 +1,14 @@
 import { ApiError } from '../../utils/apiError.js';
 import { buildIdQuery, slugify } from '../../utils/query.util.js';
-import { CounterService } from '../counter/counter.service.js';
 import { IRoleDocument, Role } from './role.model.js';
 
 export class RoleService {
   /**
-   * Create a new role with atomic auto-incremented ID
+   * Create a new role.
+   * id is optional in body and not internally generated/managed.
    */
   static async createRole(data: Partial<IRoleDocument>): Promise<IRoleDocument> {
-    let numericId: number;
-
-    if (data.id !== undefined && typeof data.id === 'number') {
-      numericId = data.id;
-      await CounterService.syncSequence('role', numericId);
-    } else if (data.customId !== undefined && typeof data.customId === 'number') {
-      numericId = data.customId;
-      await CounterService.syncSequence('role', numericId);
-    } else {
-      numericId = await CounterService.getNextSequence('role', Role);
-    }
-
+    const userProvidedId = data.id !== undefined ? data.id : data.customId;
     const slug = data.slug ? slugify(data.slug) : slugify(data.name || '');
 
     const isSlugTaken = await Role.isSlugTaken(slug);
@@ -29,8 +18,7 @@ export class RoleService {
 
     const role = await Role.create({
       ...data,
-      customId: numericId,
-      id: numericId,
+      ...(userProvidedId !== undefined ? { id: userProvidedId, customId: userProvidedId } : {}),
       slug,
     });
 
@@ -57,7 +45,7 @@ export class RoleService {
       filter.$or = [{ name: searchRegex }, { slug: searchRegex }];
     }
 
-    const sortField = query.sortBy || 'customId';
+    const sortField = query.sortBy || 'createdAt';
     const sortDirection = query.sortOrder === 'desc' ? -1 : 1;
 
     const roles = await Role.find(filter).sort({ [sortField]: sortDirection });
@@ -69,7 +57,7 @@ export class RoleService {
   }
 
   /**
-   * Get single role by MongoDB _id, numeric ID, or slug
+   * Get single role by MongoDB _id or body-provided id or slug
    */
   static async getRoleById(identifier: string): Promise<IRoleDocument> {
     const filter = buildIdQuery(identifier, { hasSlug: true });
@@ -83,7 +71,7 @@ export class RoleService {
   }
 
   /**
-   * Update role by MongoDB _id, numeric ID, or slug
+   * Update role by MongoDB _id or body-provided id or slug
    */
   static async updateRole(
     identifier: string,
@@ -105,6 +93,14 @@ export class RoleService {
       role.slug = slug;
     }
 
+    if (updateData.id !== undefined) {
+      role.id = updateData.id;
+      role.customId = updateData.id;
+    } else if (updateData.customId !== undefined) {
+      role.id = updateData.customId;
+      role.customId = updateData.customId;
+    }
+
     if (updateData.name !== undefined) role.name = updateData.name;
     if (updateData.description !== undefined) role.description = updateData.description;
     if (updateData.isActive !== undefined) role.isActive = updateData.isActive;
@@ -114,7 +110,7 @@ export class RoleService {
   }
 
   /**
-   * Delete role by MongoDB _id, numeric ID, or slug
+   * Delete role by MongoDB _id or body-provided id or slug
    */
   static async deleteRole(identifier: string): Promise<void> {
     const filter = buildIdQuery(identifier, { hasSlug: true });

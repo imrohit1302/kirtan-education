@@ -1,8 +1,8 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
 export interface IRoleDocument extends Document {
-  id?: number;
-  customId?: number;
+  id?: any;
+  customId?: any;
   name: string;
   slug: string;
   description?: string;
@@ -18,12 +18,12 @@ export interface IRoleModel extends Model<IRoleDocument> {
 const roleSchema = new Schema<IRoleDocument, IRoleModel>(
   {
     customId: {
-      type: Number,
+      type: Schema.Types.Mixed,
       index: true,
       sparse: true,
     },
     id: {
-      type: Number,
+      type: Schema.Types.Mixed,
       index: true,
       sparse: true,
     },
@@ -54,7 +54,7 @@ const roleSchema = new Schema<IRoleDocument, IRoleModel>(
     toJSON: {
       virtuals: true,
       transform: (_doc, ret: Record<string, any>) => {
-        ret.id = ret.customId ?? ret.id ?? ret._id?.toString();
+        ret.id = ret.id !== undefined && ret.id !== null ? ret.id : (ret.customId !== undefined && ret.customId !== null ? ret.customId : ret._id?.toString());
         ret.created_at = ret.createdAt;
         delete ret.__v;
         return ret;
@@ -76,4 +76,3 @@ roleSchema.statics.isSlugTaken = async function (
 };
 
 export const Role = mongoose.model<IRoleDocument, IRoleModel>('Role', roleSchema);
-

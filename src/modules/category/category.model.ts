@@ -1,8 +1,8 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
 export interface ICategoryDocument extends Document {
-  id?: number;
-  customId?: number;
+  id?: any;
+  customId?: any;
   name_unicode: string;
   name: string;
   slug: string;
@@ -19,12 +19,12 @@ export interface ICategoryModel extends Model<ICategoryDocument> {
 const categorySchema = new Schema<ICategoryDocument, ICategoryModel>(
   {
     customId: {
-      type: Number,
+      type: Schema.Types.Mixed,
       index: true,
       sparse: true,
     },
     id: {
-      type: Number,
+      type: Schema.Types.Mixed,
       index: true,
       sparse: true,
     },
@@ -60,7 +60,7 @@ const categorySchema = new Schema<ICategoryDocument, ICategoryModel>(
     toJSON: {
       virtuals: true,
       transform: (_doc, ret: Record<string, any>) => {
-        ret.id = ret.customId ?? ret.id ?? ret._id?.toString();
+        ret.id = ret.id !== undefined && ret.id !== null ? ret.id : (ret.customId !== undefined && ret.customId !== null ? ret.customId : ret._id?.toString());
         ret.created_at = ret.createdAt;
         delete ret.__v;
         return ret;
@@ -85,4 +85,3 @@ export const Category = mongoose.model<ICategoryDocument, ICategoryModel>(
   'Category',
   categorySchema
 );
-

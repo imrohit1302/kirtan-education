@@ -775,7 +775,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name_unicode\": \"ਵੋਕਲ\",\n  \"name\": \"Vocal\",\n  \"slug\": \"vocal\",\n  \"description\": \"Vocal singing lessons and riyaz practices\"\n}"
+              "raw": "{\n  \"id\": 1,\n  \"name_unicode\": \"ਵੋਕਲ\",\n  \"name\": \"Vocal\",\n  \"slug\": \"vocal\",\n  \"description\": \"Vocal singing lessons and riyaz practices\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/categories",
@@ -788,7 +788,7 @@
                 "categories"
               ]
             },
-            "description": "Creates a new Category. Sequential integer ID is auto-incremented and managed by Counter model."
+            "description": "Creates a new Category with optional client-supplied id. ID can be queried using either numeric id, string slug, or Mongoose _id."
           }
         },
         {
@@ -934,7 +934,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Vocalist\",\n  \"slug\": \"vocalist\",\n  \"description\": \"Classical Gurmat Sangeet vocal performer\"\n}"
+              "raw": "{\n  \"id\": 1,\n  \"name\": \"Vocalist\",\n  \"slug\": \"vocalist\",\n  \"description\": \"Classical Gurmat Sangeet vocal performer\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/roles",
@@ -947,7 +947,7 @@
                 "roles"
               ]
             },
-            "description": "Creates a musical role. Sequential integer ID is auto-incremented and managed by Counter model."
+            "description": "Creates a musical role with optional client-supplied id. Can be queried using either numeric id, string slug, or Mongoose _id."
           }
         },
         {
@@ -1093,7 +1093,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name_unicode\": \"ਸਿਰੀ ਰਾਗੁ\",\n  \"name\": \"Sri Raag\",\n  \"slug\": \"sri-raag\",\n  \"display_order\": 1,\n  \"aroh\": \"Sa Re Ma Pa Ni Sa\",\n  \"avroh\": \"Sa Ni Dha Pa Ma Ga Re Sa\",\n  \"pakad\": \"Re Ma Pa, Ma Re, Sa\",\n  \"thaat\": \"Kalyan\",\n  \"jaati\": \"Audav-Sampooran\",\n  \"vaadi\": \"Re\",\n  \"samvadi\": \"Pa\",\n  \"time\": \"Evening\",\n  \"sur\": \"Sa Re Ga Ma Pa Dha Ni\",\n  \"wargit_sur\": \"Sa Re Ga, Re Ga Ma, Ga Ma Pa\"\n}"
+              "raw": "{\n  \"id\": 1,\n  \"name_unicode\": \"ਸਿਰੀ ਰਾਗੁ\",\n  \"name\": \"Sri Raag\",\n  \"slug\": \"sri-raag\",\n  \"display_order\": 1,\n  \"aroh\": \"Sa Re Ma Pa Ni Sa\",\n  \"avroh\": \"Sa Ni Dha Pa Ma Ga Re Sa\",\n  \"pakad\": \"Re Ma Pa, Ma Re, Sa\",\n  \"thaat\": \"Kalyan\",\n  \"jaati\": \"Audav-Sampooran\",\n  \"vaadi\": \"Re\",\n  \"samvadi\": \"Pa\",\n  \"time\": \"Evening\",\n  \"sur\": \"Sa Re Ga Ma Pa Dha Ni\",\n  \"wargit_sur\": \"Sa Re Ga, Re Ga Ma, Ga Ma Pa\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/raags",
@@ -1106,7 +1106,7 @@
                 "raags"
               ]
             },
-            "description": "Creates a Raag definition. Sequential integer ID is auto-incremented and managed by Counter model."
+            "description": "Creates a Raag definition with optional client-supplied id. Can be queried using either numeric id, string slug, or Mongoose _id."
           }
         },
         {
@@ -1252,7 +1252,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Introduction to Sri Raag\",\n  \"yt_link\": \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\",\n  \"shabad_id\": 101,\n  \"raag\": 1,\n  \"role\": 1,\n  \"category\": 1,\n  \"verse_id\": 1001,\n  \"first_letter_start\": \"ਕ\",\n  \"description\": \"Detailed introductory tutorial on Sri Raag swar structures.\"\n}"
+              "raw": "{\n  \"id\": 1,\n  \"title\": \"Introduction to Sri Raag\",\n  \"yt_link\": \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\",\n  \"shabad_id\": 101,\n  \"raag\": 1,\n  \"role\": 1,\n  \"category\": 1,\n  \"verse_id\": 1001,\n  \"first_letter_start\": \"ਕ\",\n  \"description\": \"Detailed introductory tutorial on Sri Raag swar structures.\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/tutorials",
@@ -1265,7 +1265,7 @@
                 "tutorials"
               ]
             },
-            "description": "Creates an educational tutorial. Sequential integer ID is auto-incremented and managed by Counter model."
+            "description": "Creates an educational tutorial with optional client-supplied id. Can be queried using either numeric id or Mongoose _id."
           }
         },
         {
@@ -1411,7 +1411,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Gurmat Sangeet Darpan\",\n  \"description\": \"A comprehensive guide to Gurmat Sangeet, Raag, and Shabad Kirtan.\",\n  \"authorName\": \"Bhai Sahib Singh\",\n  \"imageUrl\": \"https://example.com/images/gurmat-sangeet.jpg\",\n  \"pdfUrl\": \"https://example.com/books/gurmat-sangeet.pdf\",\n  \"category\": \"Gurmat Sangeet\"\n}"
+              "raw": "{\n  \"id\": \"BOOK001\",\n  \"name\": \"Gurmat Sangeet Darpan\",\n  \"description\": \"A comprehensive guide to Gurmat Sangeet, Raag, and Shabad Kirtan.\",\n  \"authorName\": \"Bhai Sahib Singh\",\n  \"imageUrl\": \"https://example.com/images/gurmat-sangeet.jpg\",\n  \"pdfUrl\": \"https://example.com/books/gurmat-sangeet.pdf\",\n  \"category\": \"Gurmat Sangeet\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/books",
@@ -1424,7 +1424,7 @@
                 "books"
               ]
             },
-            "description": "Creates a new reference book. Sequential code ID (e.g. BOOK001) is auto-incremented and managed by Counter model."
+            "description": "Creates a new reference book with optional client-supplied id (e.g. BOOK001). Can be queried using either book id or Mongoose _id."
           }
         },
         {

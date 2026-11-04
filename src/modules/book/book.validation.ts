@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 export const createBookSchema = {
   body: z.object({
-    id: z.string().trim().optional(),
-    customId: z.string().trim().optional(),
+    id: z.union([z.number(), z.string().trim()]).optional(),
+    customId: z.union([z.number(), z.string().trim()]).optional(),
     name: z.string().trim().min(1, 'Book name is required'),
     description: z.string().trim().optional(),
     authorName: z.string().trim().min(1, 'Author name is required'),
@@ -17,6 +17,8 @@ export const createBookSchema = {
 export const updateBookSchema = {
   body: z
     .object({
+      id: z.union([z.number(), z.string().trim()]).optional(),
+      customId: z.union([z.number(), z.string().trim()]).optional(),
       name: z.string().trim().min(1).optional(),
       description: z.string().trim().optional(),
       authorName: z.string().trim().min(1).optional(),
@@ -47,4 +49,3 @@ export const queryBookSchema = {
     sortOrder: z.enum(['asc', 'desc']).optional().default('desc'),
   }),
 };
-

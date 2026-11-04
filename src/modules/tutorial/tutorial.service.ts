@@ -1,24 +1,14 @@
 import { ApiError } from '../../utils/apiError.js';
 import { buildIdQuery } from '../../utils/query.util.js';
-import { CounterService } from '../counter/counter.service.js';
 import { ITutorialDocument, Tutorial } from './tutorial.model.js';
 
 export class TutorialService {
   /**
-   * Create a new tutorial with atomic auto-incremented ID
+   * Create a new tutorial.
+   * id is optional in body and not internally generated/managed.
    */
   static async createTutorial(data: Partial<ITutorialDocument>): Promise<ITutorialDocument> {
-    let numericId: number;
-
-    if (data.id !== undefined && typeof data.id === 'number') {
-      numericId = data.id;
-      await CounterService.syncSequence('tutorial', numericId);
-    } else if (data.customId !== undefined && typeof data.customId === 'number') {
-      numericId = data.customId;
-      await CounterService.syncSequence('tutorial', numericId);
-    } else {
-      numericId = await CounterService.getNextSequence('tutorial', Tutorial);
-    }
+    const userProvidedId = data.id !== undefined ? data.id : data.customId;
 
     let firstLetter = data.first_letter_start;
     if (!firstLetter && data.title) {
@@ -30,8 +20,7 @@ export class TutorialService {
 
     const tutorial = await Tutorial.create({
       ...data,
-      customId: numericId,
-      id: numericId,
+      ...(userProvidedId !== undefined ? { id: userProvidedId, customId: userProvidedId } : {}),
       first_letter_start: firstLetter,
     });
 
@@ -108,7 +97,7 @@ export class TutorialService {
       filter.$or = [{ title: searchRegex }, { description: searchRegex }];
     }
 
-    const sortField = query.sortBy || 'customId';
+    const sortField = query.sortBy || 'createdAt';
     const sortDirection = query.sortOrder === 'desc' ? -1 : 1;
 
     const tutorials = await Tutorial.find(filter).sort({ [sortField]: sortDirection });
@@ -120,7 +109,7 @@ export class TutorialService {
   }
 
   /**
-   * Get single tutorial by MongoDB _id or numeric ID
+   * Get single tutorial by MongoDB _id or body-provided id
    */
   static async getTutorialById(identifier: string): Promise<ITutorialDocument> {
     const filter = buildIdQuery(identifier);
@@ -134,7 +123,7 @@ export class TutorialService {
   }
 
   /**
-   * Update tutorial by MongoDB _id or numeric ID
+   * Update tutorial by MongoDB _id or body-provided id
    */
   static async updateTutorial(
     identifier: string,
@@ -145,6 +134,14 @@ export class TutorialService {
 
     if (!tutorial) {
       throw ApiError.notFound(`Tutorial with identifier '${identifier}' not found`);
+    }
+
+    if (updateData.id !== undefined) {
+      tutorial.id = updateData.id;
+      tutorial.customId = updateData.id;
+    } else if (updateData.customId !== undefined) {
+      tutorial.id = updateData.customId;
+      tutorial.customId = updateData.customId;
     }
 
     const updatableFields: (keyof ITutorialDocument)[] = [
@@ -178,7 +175,7 @@ export class TutorialService {
   }
 
   /**
-   * Delete tutorial by MongoDB _id or numeric ID
+   * Delete tutorial by MongoDB _id or body-provided id
    */
   static async deleteTutorial(identifier: string): Promise<void> {
     const filter = buildIdQuery(identifier);

@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 export const createTutorialSchema = {
   body: z.object({
-    id: z.number().int().positive().optional(),
-    customId: z.number().int().positive().optional(),
+    id: z.union([z.number(), z.string().trim()]).optional(),
+    customId: z.union([z.number(), z.string().trim()]).optional(),
     title: z.string().trim().min(1, 'Tutorial title is required'),
     yt_link: z.string().trim().min(1, 'YouTube link (yt_link) is required'),
     shabad_id: z.union([z.number(), z.string().trim()]).optional(),
@@ -20,6 +20,8 @@ export const createTutorialSchema = {
 export const updateTutorialSchema = {
   body: z
     .object({
+      id: z.union([z.number(), z.string().trim()]).optional(),
+      customId: z.union([z.number(), z.string().trim()]).optional(),
       title: z.string().trim().min(1).optional(),
       yt_link: z.string().trim().min(1).optional(),
       shabad_id: z.union([z.number(), z.string().trim()]).optional(),
@@ -53,8 +55,7 @@ export const queryTutorialSchema = {
         if (val === 'false') return false;
         return undefined;
       }),
-    sortBy: z.string().trim().optional().default('customId'),
+    sortBy: z.string().trim().optional().default('createdAt'),
     sortOrder: z.enum(['asc', 'desc']).optional().default('asc'),
   }),
 };
-

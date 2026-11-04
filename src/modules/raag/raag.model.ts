@@ -1,8 +1,8 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
 export interface IRaagDocument extends Document {
-  id?: number;
-  customId?: number;
+  id?: any;
+  customId?: any;
   name_unicode: string;
   name: string;
   slug: string;
@@ -30,12 +30,12 @@ export interface IRaagModel extends Model<IRaagDocument> {
 const raagSchema = new Schema<IRaagDocument, IRaagModel>(
   {
     customId: {
-      type: Number,
+      type: Schema.Types.Mixed,
       index: true,
       sparse: true,
     },
     id: {
-      type: Number,
+      type: Schema.Types.Mixed,
       index: true,
       sparse: true,
     },
@@ -116,7 +116,7 @@ const raagSchema = new Schema<IRaagDocument, IRaagModel>(
     toJSON: {
       virtuals: true,
       transform: (_doc, ret: Record<string, any>) => {
-        ret.id = ret.customId ?? ret.id ?? ret._id?.toString();
+        ret.id = ret.id !== undefined && ret.id !== null ? ret.id : (ret.customId !== undefined && ret.customId !== null ? ret.customId : ret._id?.toString());
         ret.created_at = ret.createdAt;
         delete ret.__v;
         return ret;
@@ -138,4 +138,3 @@ raagSchema.statics.isSlugTaken = async function (
 };
 
 export const Raag = mongoose.model<IRaagDocument, IRaagModel>('Raag', raagSchema);
-

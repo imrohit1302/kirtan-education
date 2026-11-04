@@ -1,25 +1,14 @@
 import { ApiError } from '../../utils/apiError.js';
 import { buildIdQuery, slugify } from '../../utils/query.util.js';
-import { CounterService } from '../counter/counter.service.js';
 import { IRaagDocument, Raag } from './raag.model.js';
 
 export class RaagService {
   /**
-   * Create a new Raag with atomic auto-incremented ID
+   * Create a new Raag.
+   * id is optional in body and not internally generated/managed.
    */
   static async createRaag(data: Partial<IRaagDocument>): Promise<IRaagDocument> {
-    let numericId: number;
-
-    if (data.id !== undefined && typeof data.id === 'number') {
-      numericId = data.id;
-      await CounterService.syncSequence('raag', numericId);
-    } else if (data.customId !== undefined && typeof data.customId === 'number') {
-      numericId = data.customId;
-      await CounterService.syncSequence('raag', numericId);
-    } else {
-      numericId = await CounterService.getNextSequence('raag', Raag);
-    }
-
+    const userProvidedId = data.id !== undefined ? data.id : data.customId;
     const slug = data.slug ? slugify(data.slug) : slugify(data.name || '');
 
     const isSlugTaken = await Raag.isSlugTaken(slug);
@@ -29,10 +18,9 @@ export class RaagService {
 
     const raag = await Raag.create({
       ...data,
-      customId: numericId,
-      id: numericId,
+      ...(userProvidedId !== undefined ? { id: userProvidedId, customId: userProvidedId } : {}),
       slug,
-      display_order: data.display_order ?? numericId,
+      display_order: data.display_order ?? (typeof userProvidedId === 'number' ? userProvidedId : 1),
     });
 
     return raag;
@@ -87,7 +75,7 @@ export class RaagService {
   }
 
   /**
-   * Get single raag by MongoDB _id, numeric ID, or slug
+   * Get single raag by MongoDB _id or body-provided id or slug
    */
   static async getRaagById(identifier: string): Promise<IRaagDocument> {
     const filter = buildIdQuery(identifier, { hasSlug: true });
@@ -101,7 +89,7 @@ export class RaagService {
   }
 
   /**
-   * Update raag by MongoDB _id, numeric ID, or slug
+   * Update raag by MongoDB _id or body-provided id or slug
    */
   static async updateRaag(
     identifier: string,
@@ -121,6 +109,14 @@ export class RaagService {
         throw ApiError.conflict(`Raag slug '${slug}' is already in use`);
       }
       raag.slug = slug;
+    }
+
+    if (updateData.id !== undefined) {
+      raag.id = updateData.id;
+      raag.customId = updateData.id;
+    } else if (updateData.customId !== undefined) {
+      raag.id = updateData.customId;
+      raag.customId = updateData.customId;
     }
 
     const updatableFields: (keyof IRaagDocument)[] = [
@@ -152,7 +148,7 @@ export class RaagService {
   }
 
   /**
-   * Delete raag by MongoDB _id, numeric ID, or slug
+   * Delete raag by MongoDB _id or body-provided id or slug
    */
   static async deleteRaag(identifier: string): Promise<void> {
     const filter = buildIdQuery(identifier, { hasSlug: true });

@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 export const createRaagSchema = {
   body: z.object({
-    id: z.number().int().positive().optional(),
-    customId: z.number().int().positive().optional(),
+    id: z.union([z.number(), z.string().trim()]).optional(),
+    customId: z.union([z.number(), z.string().trim()]).optional(),
     name_unicode: z.string().trim().min(1, 'Unicode name (name_unicode) is required'),
     name: z.string().trim().min(1, 'Raag name is required'),
     slug: z.string().trim().toLowerCase().optional(),
@@ -26,6 +26,8 @@ export const createRaagSchema = {
 export const updateRaagSchema = {
   body: z
     .object({
+      id: z.union([z.number(), z.string().trim()]).optional(),
+      customId: z.union([z.number(), z.string().trim()]).optional(),
       name_unicode: z.string().trim().min(1).optional(),
       name: z.string().trim().min(1).optional(),
       slug: z.string().trim().toLowerCase().optional(),
@@ -65,4 +67,3 @@ export const queryRaagSchema = {
     sortOrder: z.enum(['asc', 'desc']).optional().default('asc'),
   }),
 };
-

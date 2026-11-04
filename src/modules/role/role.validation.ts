@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 export const createRoleSchema = {
   body: z.object({
-    id: z.number().int().positive().optional(),
-    customId: z.number().int().positive().optional(),
+    id: z.union([z.number(), z.string().trim()]).optional(),
+    customId: z.union([z.number(), z.string().trim()]).optional(),
     name: z.string().trim().min(1, 'Role name is required'),
     slug: z.string().trim().toLowerCase().optional(),
     description: z.string().trim().optional(),
@@ -14,6 +14,8 @@ export const createRoleSchema = {
 export const updateRoleSchema = {
   body: z
     .object({
+      id: z.union([z.number(), z.string().trim()]).optional(),
+      customId: z.union([z.number(), z.string().trim()]).optional(),
       name: z.string().trim().min(1).optional(),
       slug: z.string().trim().toLowerCase().optional(),
       description: z.string().trim().optional(),
@@ -35,8 +37,7 @@ export const queryRoleSchema = {
         if (val === 'false') return false;
         return undefined;
       }),
-    sortBy: z.string().trim().optional().default('customId'),
+    sortBy: z.string().trim().optional().default('createdAt'),
     sortOrder: z.enum(['asc', 'desc']).optional().default('asc'),
   }),
 };
-

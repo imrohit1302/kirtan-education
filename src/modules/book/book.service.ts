@@ -1,37 +1,28 @@
 import { ApiError } from '../../utils/apiError.js';
 import { buildIdQuery } from '../../utils/query.util.js';
-import { CounterService } from '../counter/counter.service.js';
 import { Book, IBookDocument } from './book.model.js';
 
 export class BookService {
   /**
-   * Create a new book with atomic auto-incremented code (e.g. BOOK001)
+   * Create a new book.
+   * id is optional in body and not internally generated/managed.
    */
   static async createBook(data: Partial<IBookDocument>): Promise<IBookDocument> {
-    let bookCode: string;
+    const userProvidedId = data.id !== undefined ? data.id : data.customId;
 
-    if (data.id || data.customId) {
-      bookCode = String(data.id || data.customId).trim();
-      const match = bookCode.match(/^BOOK(\d+)$/);
-      if (match && match[1]) {
-        await CounterService.syncSequence('book', parseInt(match[1], 10));
+    if (userProvidedId !== undefined) {
+      const existing = await Book.findOne({
+        $or: [{ customId: userProvidedId }, { id: userProvidedId }],
+      });
+
+      if (existing) {
+        throw ApiError.conflict(`Book identifier '${userProvidedId}' already exists`);
       }
-    } else {
-      bookCode = await CounterService.getNextFormattedCode('book', 'BOOK', 3, Book);
-    }
-
-    const existing = await Book.findOne({
-      $or: [{ customId: bookCode }, { id: bookCode }],
-    });
-
-    if (existing) {
-      throw ApiError.conflict(`Book identifier '${bookCode}' already exists`);
     }
 
     const book = await Book.create({
       ...data,
-      customId: bookCode,
-      id: bookCode,
+      ...(userProvidedId !== undefined ? { id: userProvidedId, customId: userProvidedId } : {}),
     });
 
     return book;
@@ -86,7 +77,7 @@ export class BookService {
   }
 
   /**
-   * Get single book by MongoDB _id or custom book code (e.g. BOOK001)
+   * Get single book by MongoDB _id or body-provided id
    */
   static async getBookById(identifier: string): Promise<IBookDocument> {
     const filter = buildIdQuery(identifier);
@@ -100,7 +91,7 @@ export class BookService {
   }
 
   /**
-   * Update book by MongoDB _id or custom book code
+   * Update book by MongoDB _id or body-provided id
    */
   static async updateBook(
     identifier: string,
@@ -111,6 +102,14 @@ export class BookService {
 
     if (!book) {
       throw ApiError.notFound(`Book with identifier '${identifier}' not found`);
+    }
+
+    if (updateData.id !== undefined) {
+      book.id = updateData.id;
+      book.customId = updateData.id;
+    } else if (updateData.customId !== undefined) {
+      book.id = updateData.customId;
+      book.customId = updateData.customId;
     }
 
     const updatableFields: (keyof IBookDocument)[] = [
@@ -134,7 +133,7 @@ export class BookService {
   }
 
   /**
-   * Delete book by MongoDB _id or custom book code
+   * Delete book by MongoDB _id or body-provided id
    */
   static async deleteBook(identifier: string): Promise<void> {
     const filter = buildIdQuery(identifier);

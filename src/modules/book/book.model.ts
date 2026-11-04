@@ -1,8 +1,8 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
 export interface IBookDocument extends Document {
-  id?: string;
-  customId?: string;
+  id?: any;
+  customId?: any;
   name: string;
   description?: string;
   authorName: string;
@@ -19,16 +19,14 @@ export type IBookModel = Model<IBookDocument>;
 const bookSchema = new Schema<IBookDocument, IBookModel>(
   {
     customId: {
-      type: String,
+      type: Schema.Types.Mixed,
       index: true,
       sparse: true,
-      trim: true,
     },
     id: {
-      type: String,
+      type: Schema.Types.Mixed,
       index: true,
       sparse: true,
-      trim: true,
     },
     name: {
       type: String,
@@ -67,7 +65,7 @@ const bookSchema = new Schema<IBookDocument, IBookModel>(
     toJSON: {
       virtuals: true,
       transform: (_doc, ret: Record<string, any>) => {
-        ret.id = ret.customId ?? ret.id ?? ret._id?.toString();
+        ret.id = ret.id !== undefined && ret.id !== null ? ret.id : (ret.customId !== undefined && ret.customId !== null ? ret.customId : ret._id?.toString());
         ret.created_at = ret.createdAt;
         delete ret.__v;
         return ret;
@@ -77,4 +75,3 @@ const bookSchema = new Schema<IBookDocument, IBookModel>(
 );
 
 export const Book = mongoose.model<IBookDocument, IBookModel>('Book', bookSchema);
-

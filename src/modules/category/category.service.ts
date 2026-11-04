@@ -1,25 +1,14 @@
 import { ApiError } from '../../utils/apiError.js';
 import { buildIdQuery, slugify } from '../../utils/query.util.js';
-import { CounterService } from '../counter/counter.service.js';
 import { Category, ICategoryDocument } from './category.model.js';
 
 export class CategoryService {
   /**
-   * Create a new category with atomic auto-incremented ID
+   * Create a new category.
+   * id is optional in body and not internally generated/managed.
    */
   static async createCategory(data: Partial<ICategoryDocument>): Promise<ICategoryDocument> {
-    let numericId: number;
-
-    if (data.id !== undefined && typeof data.id === 'number') {
-      numericId = data.id;
-      await CounterService.syncSequence('category', numericId);
-    } else if (data.customId !== undefined && typeof data.customId === 'number') {
-      numericId = data.customId;
-      await CounterService.syncSequence('category', numericId);
-    } else {
-      numericId = await CounterService.getNextSequence('category', Category);
-    }
-
+    const userProvidedId = data.id !== undefined ? data.id : data.customId;
     const slug = data.slug ? slugify(data.slug) : slugify(data.name || '');
 
     const isSlugTaken = await Category.isSlugTaken(slug);
@@ -29,8 +18,7 @@ export class CategoryService {
 
     const category = await Category.create({
       ...data,
-      customId: numericId,
-      id: numericId,
+      ...(userProvidedId !== undefined ? { id: userProvidedId, customId: userProvidedId } : {}),
       slug,
     });
 
@@ -61,7 +49,7 @@ export class CategoryService {
       ];
     }
 
-    const sortField = query.sortBy || 'customId';
+    const sortField = query.sortBy || 'createdAt';
     const sortDirection = query.sortOrder === 'desc' ? -1 : 1;
 
     const categories = await Category.find(filter).sort({ [sortField]: sortDirection });
@@ -73,7 +61,7 @@ export class CategoryService {
   }
 
   /**
-   * Get single category by MongoDB _id, numeric ID, or slug
+   * Get single category by MongoDB _id or body-provided id or slug
    */
   static async getCategoryById(identifier: string): Promise<ICategoryDocument> {
     const filter = buildIdQuery(identifier, { hasSlug: true });
@@ -87,7 +75,7 @@ export class CategoryService {
   }
 
   /**
-   * Update category by MongoDB _id, numeric ID, or slug
+   * Update category by MongoDB _id or body-provided id or slug
    */
   static async updateCategory(
     identifier: string,
@@ -109,6 +97,14 @@ export class CategoryService {
       category.slug = slug;
     }
 
+    if (updateData.id !== undefined) {
+      category.id = updateData.id;
+      category.customId = updateData.id;
+    } else if (updateData.customId !== undefined) {
+      category.id = updateData.customId;
+      category.customId = updateData.customId;
+    }
+
     if (updateData.name !== undefined) category.name = updateData.name;
     if (updateData.name_unicode !== undefined) category.name_unicode = updateData.name_unicode;
     if (updateData.description !== undefined) category.description = updateData.description;
@@ -119,7 +115,7 @@ export class CategoryService {
   }
 
   /**
-   * Delete category by MongoDB _id, numeric ID, or slug
+   * Delete category by MongoDB _id or body-provided id or slug
    */
   static async deleteCategory(identifier: string): Promise<void> {
     const filter = buildIdQuery(identifier, { hasSlug: true });
