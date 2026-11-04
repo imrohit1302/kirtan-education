@@ -7,17 +7,17 @@ export interface IRaagDocument extends Document {
   name: string;
   slug: string;
   display_order: number;
-  aroh?: string;
-  avroh?: string;
-  pakad?: string;
-  thaat?: string;
-  jaati?: string;
-  vaadi?: string;
-  samvadi?: string;
-  time?: string;
-  sur?: string;
-  wargit_sur?: string;
-  description?: string;
+  aroh?: string | null;
+  avroh?: string | null;
+  pakad?: string | null;
+  thaat?: string | null;
+  jaati?: string | null;
+  vaadi?: string | null;
+  samvadi?: string | null;
+  time?: string | null;
+  sur?: string | null;
+  wargit_sur?: string | null;
+  description?: string | null;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -64,47 +64,47 @@ const raagSchema = new Schema<IRaagDocument, IRaagModel>(
     },
     aroh: {
       type: String,
-      trim: true,
+      default: null,
     },
     avroh: {
       type: String,
-      trim: true,
+      default: null,
     },
     pakad: {
       type: String,
-      trim: true,
+      default: null,
     },
     thaat: {
       type: String,
-      trim: true,
+      default: null,
     },
     jaati: {
       type: String,
-      trim: true,
+      default: null,
     },
     vaadi: {
       type: String,
-      trim: true,
+      default: null,
     },
     samvadi: {
       type: String,
-      trim: true,
+      default: null,
     },
     time: {
       type: String,
-      trim: true,
+      default: null,
     },
     sur: {
       type: String,
-      trim: true,
+      default: null,
     },
     wargit_sur: {
       type: String,
-      trim: true,
+      default: null,
     },
     description: {
       type: String,
-      trim: true,
+      default: null,
     },
     isActive: {
       type: Boolean,

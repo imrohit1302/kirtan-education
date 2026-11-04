@@ -6,7 +6,7 @@ export const createRoleSchema = {
     customId: z.union([z.number(), z.string().trim()]).optional(),
     name: z.string().trim().min(1, 'Role name is required'),
     slug: z.string().trim().toLowerCase().optional(),
-    description: z.string().trim().optional(),
+    description: z.string().trim().nullable().optional(),
     isActive: z.boolean().optional().default(true),
   }),
 };
@@ -18,7 +18,7 @@ export const updateRoleSchema = {
       customId: z.union([z.number(), z.string().trim()]).optional(),
       name: z.string().trim().min(1).optional(),
       slug: z.string().trim().toLowerCase().optional(),
-      description: z.string().trim().optional(),
+      description: z.string().trim().nullable().optional(),
       isActive: z.boolean().optional(),
     })
     .refine(data => Object.keys(data).length > 0, {

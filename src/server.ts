@@ -3,7 +3,7 @@ import app from './app.js';
 import { connectDB, disconnectDB } from './config/db.config.js';
 import { envConfig } from './config/env.config.js';
 import { logger } from './config/logger.config.js';
-import { seedInitialUser } from './scripts/seed.js';
+import { seedAll } from './scripts/seed.js';
 
 let server: Server | undefined;
 
@@ -46,8 +46,8 @@ const bootstrap = async () => {
     // 1. Connect to MongoDB Atlas
     await connectDB();
 
-    // 2. Seed initial required account if not exists
-    await seedInitialUser();
+    // 2. Seed initial required account and reference data (Categories, Roles, Raags)
+    await seedAll();
 
     // 3. Start HTTP server on port 9003
     server = app.listen(envConfig.PORT, () => {

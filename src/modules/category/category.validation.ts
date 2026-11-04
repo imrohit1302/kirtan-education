@@ -7,7 +7,7 @@ export const createCategorySchema = {
     name_unicode: z.string().trim().min(1, 'Unicode name (name_unicode) is required'),
     name: z.string().trim().min(1, 'Category name is required'),
     slug: z.string().trim().toLowerCase().optional(),
-    description: z.string().trim().optional(),
+    description: z.string().trim().nullable().optional(),
     isActive: z.boolean().optional().default(true),
   }),
 };
@@ -20,7 +20,7 @@ export const updateCategorySchema = {
       name_unicode: z.string().trim().min(1).optional(),
       name: z.string().trim().min(1).optional(),
       slug: z.string().trim().toLowerCase().optional(),
-      description: z.string().trim().optional(),
+      description: z.string().trim().nullable().optional(),
       isActive: z.boolean().optional(),
     })
     .refine(data => Object.keys(data).length > 0, {
