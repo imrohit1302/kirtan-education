@@ -19,3 +19,4 @@ router.post('/', validate(bookmarkTutorialSchema), addBookmark);
 router.delete('/', validate(bookmarkTutorialSchema), removeBookmark);
 
 export default router;
+

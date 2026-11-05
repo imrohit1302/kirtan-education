@@ -19,6 +19,7 @@ export class UserService {
       isoCode?: string;
       deviceType?: any;
       deviceToken?: string;
+      userProfile?: string | null;
     }
   ) {
     const updatedUser = await User.findByIdAndUpdate(
@@ -30,6 +31,7 @@ export class UserService {
         ...(data.isoCode ? { isoCode: data.isoCode } : {}),
         ...(data.deviceType ? { deviceType: data.deviceType } : {}),
         ...(data.deviceToken ? { deviceToken: data.deviceToken } : {}),
+        ...(data.userProfile !== undefined ? { userProfile: data.userProfile } : {}),
       },
       { returnDocument: 'after', runValidators: true }
     );

@@ -10,6 +10,7 @@ export interface IUser {
   phone?: string;
   countryCode?: string;
   isoCode?: string;
+  userProfile?: string | null;
   role: UserRole;
   isAccountVerified: boolean;
   otp?: string;

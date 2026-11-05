@@ -43,3 +43,4 @@ export const Bookmark = mongoose.model<IBookmarkDocument, IBookmarkModel>(
   'Bookmark',
   bookmarkSchema
 );
+

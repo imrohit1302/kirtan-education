@@ -21,6 +21,7 @@ export class AuthService {
     isoCode?: string;
     deviceType?: any;
     deviceToken?: string;
+    userProfile?: string | null;
   }) {
     const normalizedEmail = data.email.trim().toLowerCase();
     const existingUser = await User.findOne({ email: normalizedEmail });
@@ -38,6 +39,7 @@ export class AuthService {
       if (data.isoCode) existingUser.isoCode = data.isoCode;
       if (data.deviceType) existingUser.deviceType = data.deviceType;
       if (data.deviceToken) existingUser.deviceToken = data.deviceToken;
+      if (data.userProfile !== undefined) existingUser.userProfile = data.userProfile;
       existingUser.isAccountVerified = false;
 
       const otp = generateNumericOtp(6);
@@ -74,6 +76,7 @@ export class AuthService {
       isoCode: data.isoCode || 'IN',
       deviceType: data.deviceType || 'web',
       deviceToken: data.deviceToken,
+      userProfile: data.userProfile || null,
       role: ROLES.USER,
       isAccountVerified: false,
     });
@@ -311,6 +314,7 @@ export class AuthService {
     fullName: string;
     deviceType?: any;
     deviceToken?: string;
+    userProfile?: string | null;
   }) {
     let user = await User.findOne({
       $or: [{ socialType: data.socialType, socialId: data.socialId }, { email: data.email }],
@@ -327,6 +331,7 @@ export class AuthService {
         socialId: data.socialId,
         deviceType: data.deviceType || 'web',
         deviceToken: data.deviceToken,
+        userProfile: data.userProfile || null,
         role: ROLES.USER,
         isAccountVerified: true,
       });
@@ -335,6 +340,7 @@ export class AuthService {
       user.socialId = data.socialId;
       if (data.deviceType) user.deviceType = data.deviceType;
       if (data.deviceToken) user.deviceToken = data.deviceToken;
+      if (data.userProfile !== undefined) user.userProfile = data.userProfile;
     }
 
     const tokens = generateAuthTokens(user);

@@ -136,7 +136,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"fullName\": \"Inderjeet Singh\",\n  \"email\": \"inderjeet@yopmail.com\",\n  \"password\": \"123456\",\n  \"phone\": \"6283396959\",\n  \"countryCode\": \"+91\",\n  \"isoCode\": \"IN\",\n  \"deviceType\": \"ios\",\n  \"deviceToken\": \"fcm-token-test-123\"\n}"
+              "raw": "{\n  \"fullName\": \"Inderjeet Singh\",\n  \"email\": \"inderjeet@yopmail.com\",\n  \"password\": \"123456\",\n  \"phone\": \"6283396959\",\n  \"countryCode\": \"+91\",\n  \"isoCode\": \"IN\",\n  \"deviceType\": \"ios\",\n  \"deviceToken\": \"fcm-token-test-123\",\n  \"userProfile\": \"https://example.com/profiles/inderjeet.png\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/auth/sign-up",
@@ -385,7 +385,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"socialType\": \"google\",\n  \"socialId\": \"google-uid-1029384756\",\n  \"email\": \"inderjeet.google@yopmail.com\",\n  \"fullName\": \"Inderjeet Google\",\n  \"deviceType\": \"android\",\n  \"deviceToken\": \"fcm-android-token\"\n}"
+              "raw": "{\n  \"socialType\": \"google\",\n  \"socialId\": \"google-uid-1029384756\",\n  \"email\": \"inderjeet.google@yopmail.com\",\n  \"fullName\": \"Inderjeet Google\",\n  \"deviceType\": \"android\",\n  \"deviceToken\": \"fcm-android-token\",\n  \"userProfile\": \"https://example.com/profiles/social-avatar.png\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/auth/social-login",
@@ -413,7 +413,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"socialType\": \"facebook\",\n  \"socialId\": \"fb-uid-9988776655\",\n  \"email\": \"inderjeet.facebook@yopmail.com\",\n  \"fullName\": \"Inderjeet Facebook\",\n  \"deviceType\": \"web\"\n}"
+              "raw": "{\n  \"socialType\": \"facebook\",\n  \"socialId\": \"fb-uid-9988776655\",\n  \"email\": \"inderjeet.facebook@yopmail.com\",\n  \"fullName\": \"Inderjeet Facebook\",\n  \"deviceType\": \"web\",\n  \"userProfile\": \"https://example.com/profiles/social-avatar.png\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/auth/social-login",
@@ -441,7 +441,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"socialType\": \"apple\",\n  \"socialId\": \"apple-uid-0011223344\",\n  \"email\": \"inderjeet.apple@yopmail.com\",\n  \"fullName\": \"Inderjeet Apple\",\n  \"deviceType\": \"ios\"\n}"
+              "raw": "{\n  \"socialType\": \"apple\",\n  \"socialId\": \"apple-uid-0011223344\",\n  \"email\": \"inderjeet.apple@yopmail.com\",\n  \"fullName\": \"Inderjeet Apple\",\n  \"deviceType\": \"ios\",\n  \"userProfile\": \"https://example.com/profiles/social-avatar.png\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/auth/social-login",
@@ -651,7 +651,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"fullName\": \"Inderjeet Singh (Updated)\",\n  \"phone\": \"6283396959\",\n  \"countryCode\": \"+91\",\n  \"isoCode\": \"IN\",\n  \"deviceType\": \"ios\",\n  \"deviceToken\": \"updated-fcm-token\"\n}"
+              "raw": "{\n  \"fullName\": \"Inderjeet Singh (Updated)\",\n  \"phone\": \"6283396959\",\n  \"countryCode\": \"+91\",\n  \"isoCode\": \"IN\",\n  \"deviceType\": \"ios\",\n  \"deviceToken\": \"updated-fcm-token\",\n  \"userProfile\": \"https://example.com/profiles/inderjeet-updated.png\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/users/profile",

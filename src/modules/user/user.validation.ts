@@ -17,6 +17,7 @@ export const updateProfileSchema = {
       isoCode: z.string().trim().max(5).optional(),
       deviceType: z.enum(['ios', 'android', 'web']).optional(),
       deviceToken: z.string().trim().optional(),
+      userProfile: z.string().trim().nullable().optional(),
     })
     .refine(data => Object.keys(data).length > 0, {
       message: 'At least one field must be provided for profile update',

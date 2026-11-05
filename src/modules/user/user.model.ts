@@ -43,6 +43,11 @@ const userSchema = new Schema<IUserDocument, IUserModel>(
       minlength: [6, 'Password must be at least 6 characters long'],
       select: false,
     },
+    userProfile: {
+      type: String,
+      trim: true,
+      default: null,
+    },
     phone: {
       type: String,
       trim: true,

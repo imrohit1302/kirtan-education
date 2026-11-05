@@ -42,3 +42,4 @@ export const getMyBookmarks = catchAsync(async (req: Request, res: Response) => 
     total,
   });
 });
+

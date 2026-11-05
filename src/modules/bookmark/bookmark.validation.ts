@@ -31,3 +31,4 @@ export const queryBookmarksSchema = {
     sortOrder: z.enum(['asc', 'desc']).optional().default('desc'),
   }),
 };
+
