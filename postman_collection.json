@@ -604,6 +604,52 @@
             },
             "description": "Permanently deletes the authenticated user account and terminates session. Password confirmation is optional. Also accessible via POST."
           }
+        },
+        {
+          "name": "Delete Account (POST Alternate)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"token\", \"\");",
+                  "pm.collectionVariables.set(\"refreshToken\", \"\");",
+                  "pm.collectionVariables.set(\"userId\", \"\");"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/delete-account",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "delete-account"
+              ]
+            },
+            "description": "Alternate POST endpoint for permanent user account deletion. Requires Bearer JWT token."
+          }
         }
       ]
     },
@@ -1181,7 +1227,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": 1,\n  \"title\": \"Introduction to Sri Raag\",\n  \"yt_link\": \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\",\n  \"shabad_id\": 101,\n  \"raag\": 1,\n  \"role\": 1,\n  \"category\": 1,\n  \"verse_id\": 1001,\n  \"first_letter_start\": \"ਕ\",\n  \"description\": \"Detailed introductory tutorial on Sri Raag swar structures.\"\n}"
+              "raw": "{\n  \"id\": 1,\n  \"title\": \"Introduction to Sri Raag\",\n  \"yt_link\": \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\",\n  \"shabad_id\": 101,\n  \"raag\": \"6aeb25b0ad38f61438b08583\",\n  \"role\": \"6aeb25aead38f61438b0857e\",\n  \"category\": \"6aeb25adad38f61438b08579\",\n  \"verse_id\": 1001,\n  \"first_letter_start\": \"ਕ\",\n  \"description\": \"Detailed introductory tutorial on Sri Raag swar structures.\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/tutorials",
@@ -1194,7 +1240,7 @@
                 "tutorials"
               ]
             },
-            "description": "Creates an educational tutorial with optional client-supplied id. Can be queried using either numeric id or Mongoose _id."
+            "description": "Creates an educational tutorial with optional client-supplied id. Note: raag, role, and category take Mongoose ObjectId strings (or null)."
           }
         },
         {
