@@ -1,4 +1,5 @@
 import { ApiError } from '../../utils/apiError.js';
+import { BookmarkService } from '../bookmark/bookmark.service.js';
 import { buildIdQuery } from '../../utils/query.util.js';
 import { ITutorialDocument, Tutorial } from './tutorial.model.js';
 
@@ -28,20 +29,24 @@ export class TutorialService {
   }
 
   /**
-   * Get all tutorials without pagination
+   * Get all tutorials without pagination.
+   * Optionally injects isBookmarked per authenticated user.
    */
-  static async getAllTutorials(query: {
-    search?: string;
-    raag?: string | number;
-    role?: string | number;
-    category?: string | number;
-    shabad_id?: string | number;
-    verse_id?: string | number;
-    first_letter_start?: string;
-    isActive?: boolean;
-    sortBy?: string;
-    sortOrder?: 'asc' | 'desc';
-  }): Promise<{ tutorials: ITutorialDocument[]; total: number }> {
+  static async getAllTutorials(
+    query: {
+      search?: string;
+      raag?: string | number;
+      role?: string | number;
+      category?: string | number;
+      shabad_id?: string | number;
+      verse_id?: string | number;
+      first_letter_start?: string;
+      isActive?: boolean;
+      sortBy?: string;
+      sortOrder?: 'asc' | 'desc';
+    },
+    userId?: string
+  ): Promise<{ tutorials: (ITutorialDocument & { isBookmarked: boolean })[]; total: number }> {
     const filter: Record<string, any> = {};
 
     if (typeof query.isActive === 'boolean') {
@@ -92,26 +97,55 @@ export class TutorialService {
     const sortField = query.sortBy || 'createdAt';
     const sortDirection = query.sortOrder === 'desc' ? -1 : 1;
 
-    const tutorials = await Tutorial.find(filter).sort({ [sortField]: sortDirection });
+    const tutorials = await Tutorial.find(filter)
+      .populate('raag', 'name name_unicode slug id customId')
+      .populate('role', 'name slug id customId')
+      .populate('category', 'name name_unicode slug id customId')
+      .sort({ [sortField]: sortDirection });
+
+    // Inject isBookmarked per authenticated user (bulk query for performance)
+    let bookmarkedSet: Set<string> = new Set();
+    if (userId) {
+      bookmarkedSet = await BookmarkService.getBookmarkedTutorialIds(userId);
+    }
+
+    const tutorialsWithBookmark = tutorials.map(tutorial => {
+      const tutorialObj = tutorial.toJSON() as any;
+      tutorialObj.isBookmarked = bookmarkedSet.has(String(tutorial._id));
+      return tutorialObj;
+    });
 
     return {
-      tutorials,
+      tutorials: tutorialsWithBookmark,
       total: tutorials.length,
     };
   }
 
   /**
-   * Get single tutorial by MongoDB _id or body-provided id
+   * Get single tutorial by MongoDB _id or body-provided id.
+   * Optionally injects isBookmarked for the authenticated user.
    */
-  static async getTutorialById(identifier: string): Promise<ITutorialDocument> {
+  static async getTutorialById(identifier: string, userId?: string): Promise<ITutorialDocument & { isBookmarked: boolean }> {
     const filter = buildIdQuery(identifier);
-    const tutorial = await Tutorial.findOne(filter);
+    const tutorial = await Tutorial.findOne(filter)
+      .populate('raag', 'name name_unicode slug id customId')
+      .populate('role', 'name slug id customId')
+      .populate('category', 'name name_unicode slug id customId');
 
     if (!tutorial) {
       throw ApiError.notFound(`Tutorial with identifier '${identifier}' not found`);
     }
 
-    return tutorial;
+    const tutorialObj = tutorial.toJSON() as any;
+
+    if (userId) {
+      const bookmarkedSet = await BookmarkService.getBookmarkedTutorialIds(userId);
+      tutorialObj.isBookmarked = bookmarkedSet.has(String(tutorial._id));
+    } else {
+      tutorialObj.isBookmarked = false;
+    }
+
+    return tutorialObj;
   }
 
   /**

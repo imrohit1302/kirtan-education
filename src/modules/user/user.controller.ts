@@ -14,8 +14,8 @@ export const updateProfile = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const getAllUsers = catchAsync(async (req: Request, res: Response) => {
-  const { users, pagination } = await UserService.getAllUsers(req.query as any);
-  return ApiResponse.success(res, 'Users fetched successfully', { users }, 200, { pagination });
+  const { users, total } = await UserService.getAllUsers(req.query as any);
+  return ApiResponse.success(res, 'Users fetched successfully', { users, total });
 });
 
 export const getUserById = catchAsync(async (req: Request, res: Response) => {

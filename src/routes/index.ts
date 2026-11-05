@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import authRoutes from '../modules/auth/auth.routes.js';
 import bookRoutes from '../modules/book/book.routes.js';
+import bookmarkRoutes from '../modules/bookmark/bookmark.routes.js';
 import categoryRoutes from '../modules/category/category.routes.js';
 import healthRoutes from '../modules/health/health.routes.js';
 import raagRoutes from '../modules/raag/raag.routes.js';
@@ -21,5 +22,8 @@ apiRouter.use('/roles', roleRoutes);
 apiRouter.use('/raags', raagRoutes);
 apiRouter.use('/tutorials', tutorialRoutes);
 apiRouter.use('/books', bookRoutes);
+
+// Bookmark Routes
+apiRouter.use('/bookmarks', bookmarkRoutes);
 
 export default apiRouter;

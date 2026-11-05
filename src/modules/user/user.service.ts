@@ -42,15 +42,11 @@ export class UserService {
   }
 
   static async getAllUsers({
-    page = 1,
-    limit = 10,
     search,
     role,
     sortBy = 'createdAt',
     sortOrder = 'desc',
   }: {
-    page?: number;
-    limit?: number;
     search?: string;
     role?: string;
     sortBy?: string;
@@ -70,27 +66,12 @@ export class UserService {
       ];
     }
 
-    const skip = (page - 1) * limit;
     const sort: Record<string, 1 | -1> = { [sortBy]: sortOrder === 'asc' ? 1 : -1 };
 
-    const [users, total] = await Promise.all([
-      User.find(filter).sort(sort).skip(skip).limit(limit),
-      User.countDocuments(filter),
-    ]);
+    const users = await User.find(filter).sort(sort);
+    const total = users.length;
 
-    const totalPages = Math.ceil(total / limit);
-
-    return {
-      users,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages,
-        hasNextPage: page < totalPages,
-        hasPrevPage: page > 1,
-      },
-    };
+    return { users, total };
   }
 
   static async getUserById(userId: string) {

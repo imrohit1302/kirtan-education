@@ -1535,6 +1535,250 @@
           }
         }
       ]
+    },
+    {
+      "name": "9. Bookmark Section",
+      "item": [
+        {
+          "name": "Get My Bookmarks (All Bookmarked Tutorials)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/bookmarks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "bookmarks"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "createdAt",
+                  "description": "Field to sort by",
+                  "disabled": true
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc",
+                  "description": "asc or desc",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Returns all bookmarked tutorials for the authenticated user. Each tutorial includes isBookmarked: true and bookmarkedAt timestamp. References (raag, role, category) are fully populated."
+          }
+        },
+        {
+          "name": "Bookmark a Tutorial",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tutorialId\": \"{{tutorialId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/bookmarks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "bookmarks"
+              ]
+            },
+            "description": "Bookmarks a tutorial for the authenticated user. Pass tutorialId as MongoDB ObjectId (24-char hex) or numeric id. Returns 409 Conflict if already bookmarked."
+          }
+        },
+        {
+          "name": "Unbookmark a Tutorial",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tutorialId\": \"{{tutorialId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/bookmarks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "bookmarks"
+              ]
+            },
+            "description": "Removes a bookmark for the authenticated user. Returns 404 if the tutorial was not bookmarked."
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Admin — Users Management",
+      "item": [
+        {
+          "name": "Get All Users (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Search by fullName, email, or phone",
+                  "disabled": true
+                },
+                {
+                  "key": "role",
+                  "value": "user",
+                  "description": "Filter by role: user | admin",
+                  "disabled": true
+                },
+                {
+                  "key": "sortBy",
+                  "value": "createdAt",
+                  "disabled": true
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Admin-only. Returns all registered users without pagination. Supports filtering by role and search term."
+          }
+        },
+        {
+          "name": "Get User By ID (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "{{userId}}"
+              ]
+            },
+            "description": "Admin-only. Fetch a specific user by their MongoDB ObjectId."
+          }
+        },
+        {
+          "name": "Update User Role (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/{{userId}}/role",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "{{userId}}",
+                "role"
+              ]
+            },
+            "description": "Admin-only. Updates a user's role. Accepts: user | admin."
+          }
+        },
+        {
+          "name": "Delete User (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/{{userId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "{{userId}}"
+              ]
+            },
+            "description": "Admin-only. Permanently deletes a user by their MongoDB ObjectId."
+          }
+        }
+      ]
     }
   ]
 }

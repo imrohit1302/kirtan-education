@@ -27,15 +27,15 @@ router.use(authenticate);
 router.get('/profile', getProfile);
 router.patch('/profile', validate(updateProfileSchema), updateProfile);
 
-// Admin-only management endpoints (Commented out as requested)
-// router.get('/', authorize(ROLES.ADMIN), validate(queryUsersSchema), getAllUsers);
-// router.get('/:id', authorize(ROLES.ADMIN), validate(userIdParamSchema), getUserById);
-// router.patch(
-//   '/:id/role',
-//   authorize(ROLES.ADMIN),
-//   validate(updateUserRoleSchema),
-//   updateUserRole
-// );
-// router.delete('/:id', authorize(ROLES.ADMIN), validate(userIdParamSchema), deleteUser);
+// Admin-only management endpoints
+router.get('/', authorize(ROLES.ADMIN), validate(queryUsersSchema), getAllUsers);
+router.get('/:id', authorize(ROLES.ADMIN), validate(userIdParamSchema), getUserById);
+router.patch(
+  '/:id/role',
+  authorize(ROLES.ADMIN),
+  validate(updateUserRoleSchema),
+  updateUserRole
+);
+router.delete('/:id', authorize(ROLES.ADMIN), validate(userIdParamSchema), deleteUser);
 
 export default router;
