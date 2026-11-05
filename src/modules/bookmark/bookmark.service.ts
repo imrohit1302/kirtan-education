@@ -75,14 +75,7 @@ export class BookmarkService {
 
     const bookmarks = await Bookmark.find({ userId: userObjectId })
       .sort({ [sortField]: sortDirection })
-      .populate({
-        path: 'tutorialId',
-        populate: [
-          { path: 'raag', select: 'name name_unicode slug id customId' },
-          { path: 'role', select: 'name slug id customId' },
-          { path: 'category', select: 'name name_unicode slug id customId' },
-        ],
-      })
+      .populate('tutorialId')
       .lean();
 
     // Map: flatten bookmark into tutorial, inject isBookmarked: true

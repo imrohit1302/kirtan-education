@@ -97,11 +97,7 @@ export class TutorialService {
     const sortField = query.sortBy || 'createdAt';
     const sortDirection = query.sortOrder === 'desc' ? -1 : 1;
 
-    const tutorials = await Tutorial.find(filter)
-      .populate('raag', 'name name_unicode slug id customId')
-      .populate('role', 'name slug id customId')
-      .populate('category', 'name name_unicode slug id customId')
-      .sort({ [sortField]: sortDirection });
+    const tutorials = await Tutorial.find(filter).sort({ [sortField]: sortDirection });
 
     // Inject isBookmarked per authenticated user (bulk query for performance)
     let bookmarkedSet: Set<string> = new Set();
@@ -127,10 +123,7 @@ export class TutorialService {
    */
   static async getTutorialById(identifier: string, userId?: string): Promise<ITutorialDocument & { isBookmarked: boolean }> {
     const filter = buildIdQuery(identifier);
-    const tutorial = await Tutorial.findOne(filter)
-      .populate('raag', 'name name_unicode slug id customId')
-      .populate('role', 'name slug id customId')
-      .populate('category', 'name name_unicode slug id customId');
+    const tutorial = await Tutorial.findOne(filter);
 
     if (!tutorial) {
       throw ApiError.notFound(`Tutorial with identifier '${identifier}' not found`);
