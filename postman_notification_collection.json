@@ -1,0 +1,261 @@
+{
+  "info": {
+    "_postman_id": "ebce7afe-d8a0-41ee-8e5a-2ebb25ceb7a1",
+    "name": "Kirtan Education - Notification Module",
+    "description": "Complete Postman Collection for Firebase Cloud Messaging (FCM) & In-App Notification System.\nIncludes Get All Notifications (Auto Marks Read), Mark One by One, Mark All Read, Delete Notification, Clear All, and Admin Broadcast/Selected Batch Push (up to 400).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:9003",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "notificationId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Get My Notifications (Auto Marks Read)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "if (jsonData.success && jsonData.data && jsonData.data.notifications && jsonData.data.notifications.length > 0) {",
+              "    var firstNotif = jsonData.data.notifications[0];",
+              "    pm.collectionVariables.set('notificationId', firstNotif.id ? String(firstNotif.id) : firstNotif._id);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/notifications",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "notifications"
+          ],
+          "query": [
+            {
+              "key": "isRead",
+              "value": "false",
+              "description": "Filter by read status: true | false",
+              "disabled": true
+            },
+            {
+              "key": "type",
+              "value": "NEW_TUTORIAL",
+              "description": "Filter by type (e.g. NEW_TUTORIAL, ADMIN_BROADCAST)",
+              "disabled": true
+            },
+            {
+              "key": "sortBy",
+              "value": "createdAt",
+              "disabled": true
+            },
+            {
+              "key": "sortOrder",
+              "value": "desc",
+              "disabled": true
+            }
+          ]
+        },
+        "description": "Retrieves all notifications for current authenticated user without pagination. When this API is called, all retrieved unread notifications are automatically marked as read (isRead: true)."
+      }
+    },
+    {
+      "name": "Mark Notification As Read (One by One)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/notifications/{{notificationId}}/read",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "notifications",
+            "{{notificationId}}",
+            "read"
+          ]
+        },
+        "description": "Marks a single notification as read by its ID (sets isRead: true and readAt timestamp)."
+      }
+    },
+    {
+      "name": "Mark All Notifications As Read",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/notifications/read-all",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "notifications",
+            "read-all"
+          ]
+        },
+        "description": "Explicitly marks all notifications as read for current user."
+      }
+    },
+    {
+      "name": "Delete Notification By ID",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/notifications/{{notificationId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "notifications",
+            "{{notificationId}}"
+          ]
+        },
+        "description": "Permanently deletes a notification by ID for current authenticated user."
+      }
+    },
+    {
+      "name": "Clear All My Notifications",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/notifications",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "notifications"
+          ]
+        },
+        "description": "Clears/deletes all notifications for current authenticated user."
+      }
+    },
+    {
+      "name": "Admin — Send Notification (Broadcast to All Users)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"New Gurmat Sangeet Raag Available! 🎶\",\n  \"description\": \"A new live riyaz masterclass session is now open for practice.\",\n  \"imageUrl\": \"https://example.com/notifications/riyaz-cover.jpg\",\n  \"type\": \"ADMIN_BROADCAST\",\n  \"selectedUsers\": \"all\",\n  \"data\": {\n    \"screen\": \"TutorialDetail\",\n    \"tutorialId\": \"1\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/notifications/send",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "notifications",
+            "send"
+          ]
+        },
+        "description": "Admin-only. Broadcasts in-app notification to all active users (default isRead: false) and dispatches Firebase Cloud Messaging (FCM) push notifications in batches of up to 400 users."
+      }
+    },
+    {
+      "name": "Admin — Send Notification (Selected Users)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Welcome to Intermediate Harmonium Practice! 🎹\",\n  \"description\": \"Your progress has unlocked new practice lessons.\",\n  \"imageUrl\": \"https://example.com/notifications/harmonium.jpg\",\n  \"type\": \"USER_ALERT\",\n  \"selectedUsers\": [\"{{userId}}\"],\n  \"data\": {\n    \"screen\": \"Profile\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/notifications/send",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "notifications",
+            "send"
+          ]
+        },
+        "description": "Admin-only. Sends in-app and FCM push notification to specific selected user IDs in batches of up to 400 users."
+      }
+    }
+  ]
+}
