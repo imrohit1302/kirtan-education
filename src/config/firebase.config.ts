@@ -1,4 +1,5 @@
-import admin from 'firebase-admin';
+import { cert, getApps, initializeApp, type ServiceAccount } from 'firebase-admin/app';
+import { getMessaging, type Messaging, type MulticastMessage, type SendResponse } from 'firebase-admin/messaging';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -16,7 +17,7 @@ let isInitialized = false;
  * 2. Process env FIREBASE_SERVICE_ACCOUNT_PATH (file path)
  * 3. Default relative files: serviceAccountKey.json, firebase-service-account.json
  */
-const loadServiceAccountCredentials = (): admin.ServiceAccount | null => {
+const loadServiceAccountCredentials = (): ServiceAccount | null => {
   const rootDir = path.resolve(__dirname, '../../');
 
   // 1. Check FIREBASE_SERVICE_ACCOUNT_KEY
@@ -25,7 +26,7 @@ const loadServiceAccountCredentials = (): admin.ServiceAccount | null => {
     const trimmed = envKey.trim();
     if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
       try {
-        return JSON.parse(trimmed);
+        return JSON.parse(trimmed) as ServiceAccount;
       } catch (e: any) {
         logger.error('Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY as JSON:', { error: e.message });
       }
@@ -34,7 +35,7 @@ const loadServiceAccountCredentials = (): admin.ServiceAccount | null => {
       const resolvedPath = path.isAbsolute(trimmed) ? trimmed : path.resolve(rootDir, trimmed);
       if (fs.existsSync(resolvedPath)) {
         try {
-          return JSON.parse(fs.readFileSync(resolvedPath, 'utf-8'));
+          return JSON.parse(fs.readFileSync(resolvedPath, 'utf-8')) as ServiceAccount;
         } catch (e: any) {
           logger.error(`Failed to read Firebase service account at path: ${resolvedPath}`, { error: e.message });
         }
@@ -48,7 +49,7 @@ const loadServiceAccountCredentials = (): admin.ServiceAccount | null => {
     const resolvedPath = path.isAbsolute(envPath) ? envPath : path.resolve(rootDir, envPath.trim());
     if (fs.existsSync(resolvedPath)) {
       try {
-        return JSON.parse(fs.readFileSync(resolvedPath, 'utf-8'));
+        return JSON.parse(fs.readFileSync(resolvedPath, 'utf-8')) as ServiceAccount;
       } catch (e: any) {
         logger.error(`Failed to read Firebase service account from FIREBASE_SERVICE_ACCOUNT_PATH: ${resolvedPath}`, { error: e.message });
       }
@@ -65,7 +66,7 @@ const loadServiceAccountCredentials = (): admin.ServiceAccount | null => {
   for (const loc of defaultLocations) {
     if (fs.existsSync(loc)) {
       try {
-        const parsed = JSON.parse(fs.readFileSync(loc, 'utf-8'));
+        const parsed = JSON.parse(fs.readFileSync(loc, 'utf-8')) as ServiceAccount;
         logger.info(`Loaded Firebase credentials from file: ${loc}`);
         return parsed;
       } catch (e: any) {
@@ -86,7 +87,7 @@ export const initFirebase = (): boolean => {
   }
 
   try {
-    if (admin.apps.length > 0) {
+    if (getApps().length > 0) {
       isInitialized = true;
       return true;
     }
@@ -100,8 +101,8 @@ export const initFirebase = (): boolean => {
       return false;
     }
 
-    admin.initializeApp({
-      credential: admin.credential.cert(credentials),
+    initializeApp({
+      credential: cert(credentials),
     });
 
     isInitialized = true;
@@ -121,17 +122,17 @@ export const initFirebase = (): boolean => {
  * Check if Firebase Admin is currently active and initialized
  */
 export const isFirebaseReady = (): boolean => {
-  return isInitialized && admin.apps.length > 0;
+  return isInitialized && getApps().length > 0;
 };
 
 /**
  * Get Firebase Messaging instance if available
  */
-export const getFirebaseMessaging = (): admin.messaging.Messaging | null => {
+export const getFirebaseMessaging = (): Messaging | null => {
   if (!isFirebaseReady()) {
     initFirebase();
   }
-  return isFirebaseReady() ? admin.messaging() : null;
+  return isFirebaseReady() ? getMessaging() : null;
 };
 
 export interface PushNotificationPayload {
@@ -193,7 +194,7 @@ export const sendBatchPushNotifications = async (
   for (let i = 0; i < validTokens.length; i += batchSize) {
     const chunk = validTokens.slice(i, i + batchSize);
 
-    const message: admin.messaging.MulticastMessage = {
+    const message: MulticastMessage = {
       tokens: chunk,
       notification: {
         title: payload.title,
@@ -226,7 +227,7 @@ export const sendBatchPushNotifications = async (
       totalSuccess += response.successCount;
       totalFailure += response.failureCount;
 
-      response.responses.forEach((resp, index) => {
+      response.responses.forEach((resp: SendResponse | any, index: number) => {
         if (!resp.success) {
           const failedToken = chunk[index];
           failedTokens.push(failedToken);
@@ -260,5 +261,3 @@ export const sendBatchPushNotifications = async (
     failedTokens,
   };
 };
-
-export default admin;
