@@ -32,6 +32,10 @@ const envSchema = z.object({
   SMTP_FROM: z.string().default('vidyalyaraag@gmail.com'),
   SMTP_PORT: z.coerce.number().int().default(587),
   SMTP_SECURE: z.coerce.boolean().default(false),
+
+  // Firebase Service Account Credentials (JSON string or file path)
+  FIREBASE_SERVICE_ACCOUNT_KEY: z.string().optional(),
+  FIREBASE_SERVICE_ACCOUNT_PATH: z.string().optional(),
 });
 
 const parseResult = envSchema.safeParse(process.env);

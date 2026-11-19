@@ -39,3 +39,8 @@ coverage/
 dist/
 build/
 
+# Firebase Service Account Credentials
+*serviceAccountKey*.json
+*firebase-service-account*.json
+firebase-credentials.json
+

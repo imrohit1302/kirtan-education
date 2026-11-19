@@ -52,6 +52,7 @@ export type { IRoleDocument } from '../modules/role/role.model.js';
 export type { IRaagDocument } from '../modules/raag/raag.model.js';
 export type { ITutorialDocument } from '../modules/tutorial/tutorial.model.js';
 export type { IBookDocument } from '../modules/book/book.model.js';
+export type { INotificationDocument } from '../modules/notification/notification.model.js';
 
 declare global {
   namespace Express {

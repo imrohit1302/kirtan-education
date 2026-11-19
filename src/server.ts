@@ -2,6 +2,7 @@ import { Server } from 'node:http';
 import app from './app.js';
 import { connectDB, disconnectDB } from './config/db.config.js';
 import { envConfig } from './config/env.config.js';
+import { initFirebase } from './config/firebase.config.js';
 import { logger } from './config/logger.config.js';
 import { seedAll } from './scripts/seed.js';
 
@@ -46,10 +47,13 @@ const bootstrap = async () => {
     // 1. Connect to MongoDB Atlas
     await connectDB();
 
-    // 2. Seed initial required account and reference data (Categories, Roles, Raags)
+    // 2. Initialize Firebase Admin SDK for Push Notifications
+    initFirebase();
+
+    // 3. Seed initial required account and reference data (Categories, Roles, Raags)
     await seedAll();
 
-    // 3. Start HTTP server on port 9003
+    // 4. Start HTTP server on port 9003
     server = app.listen(envConfig.PORT, () => {
       logger.info('====================================================');
       logger.info(`🚀 Kirtan Education API running in [${envConfig.NODE_ENV}] mode`);

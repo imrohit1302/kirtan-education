@@ -4,6 +4,7 @@ import bookRoutes from '../modules/book/book.routes.js';
 import bookmarkRoutes from '../modules/bookmark/bookmark.routes.js';
 import categoryRoutes from '../modules/category/category.routes.js';
 import healthRoutes from '../modules/health/health.routes.js';
+import notificationRoutes from '../modules/notification/notification.routes.js';
 import raagRoutes from '../modules/raag/raag.routes.js';
 import roleRoutes from '../modules/role/role.routes.js';
 import tutorialRoutes from '../modules/tutorial/tutorial.routes.js';
@@ -25,5 +26,8 @@ apiRouter.use('/books', bookRoutes);
 
 // Bookmark Routes
 apiRouter.use('/bookmarks', bookmarkRoutes);
+
+// In-App & Push Notification Routes
+apiRouter.use('/notifications', notificationRoutes);
 
 export default apiRouter;

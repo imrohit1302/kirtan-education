@@ -1,10 +1,24 @@
 import { Request, Response } from 'express';
+import { logger } from '../../config/logger.config.js';
 import { ApiResponse } from '../../utils/apiResponse.js';
 import { catchAsync } from '../../utils/catchAsync.js';
+import { NotificationService } from '../notification/notification.service.js';
 import { TutorialService } from './tutorial.service.js';
 
 export const createTutorial = catchAsync(async (req: Request, res: Response) => {
   const tutorial = await TutorialService.createTutorial(req.body);
+
+  // Trigger push & in-app notification to all users asynchronously
+  NotificationService.notifyNewTutorial({
+    id: tutorial.id || tutorial.customId || tutorial._id,
+    title: tutorial.title,
+    description: tutorial.description || `New tutorial "${tutorial.title}" has been published.`,
+  }).catch(err => {
+    logger.error('Failed to dispatch notification for newly created tutorial:', {
+      error: err.message,
+    });
+  });
+
   return ApiResponse.created(res, 'Tutorial created successfully', { tutorial });
 });
 
