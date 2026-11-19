@@ -166,6 +166,7 @@ export class TutorialService {
     const updatableFields: (keyof ITutorialDocument)[] = [
       'title',
       'yt_link',
+      'notationUrl',
       'shabad_id',
       'raag',
       'role',

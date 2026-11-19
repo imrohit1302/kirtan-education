@@ -5,6 +5,7 @@ export interface ITutorialDocument extends Document {
   customId?: any;
   title: string;
   yt_link: string;
+  notationUrl?: string | null;
   shabad_id?: number | string | null;
   raag?: mongoose.Types.ObjectId | string | null;
   role?: mongoose.Types.ObjectId | string | null;
@@ -40,6 +41,11 @@ const tutorialSchema = new Schema<ITutorialDocument, ITutorialModel>(
       type: String,
       required: [true, 'YouTube video link (yt_link) is required'],
       trim: true,
+    },
+    notationUrl: {
+      type: String,
+      trim: true,
+      default: null,
     },
     shabad_id: {
       type: Schema.Types.Mixed,

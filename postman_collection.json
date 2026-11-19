@@ -1232,7 +1232,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": 1,\n  \"title\": \"Introduction to Sri Raag\",\n  \"yt_link\": \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\",\n  \"shabad_id\": 101,\n  \"raag\": \"6aeb25b0ad38f61438b08583\",\n  \"role\": \"6aeb25aead38f61438b0857e\",\n  \"category\": \"6aeb25adad38f61438b08579\",\n  \"verse_id\": 1001,\n  \"first_letter_start\": \"ਕ\",\n  \"description\": \"Detailed introductory tutorial on Sri Raag swar structures.\"\n}"
+              "raw": "{\n  \"id\": 1,\n  \"title\": \"Introduction to Sri Raag\",\n  \"yt_link\": \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\",\n  \"shabad_id\": 101,\n  \"raag\": \"6aeb25b0ad38f61438b08583\",\n  \"role\": \"6aeb25aead38f61438b0857e\",\n  \"category\": \"6aeb25adad38f61438b08579\",\n  \"verse_id\": 1001,\n  \"first_letter_start\": \"ਕ\",\n  \"description\": \"Detailed introductory tutorial on Sri Raag swar structures.\",\n  \"notationUrl\": \"https://example.com/notations/sri-raag.pdf\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/tutorials",
@@ -1313,7 +1313,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Introduction to Sri Raag - Masterclass Edition\",\n  \"description\": \"Updated high-definition practice session.\"\n}"
+              "raw": "{\n  \"title\": \"Introduction to Sri Raag - Masterclass Edition\",\n  \"description\": \"Updated high-definition practice session.\",\n  \"notationUrl\": \"https://example.com/notations/sri-raag-updated.pdf\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/v1/tutorials/{{tutorialId}}",
